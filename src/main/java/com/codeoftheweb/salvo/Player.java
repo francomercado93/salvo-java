@@ -1,22 +1,36 @@
 package com.codeoftheweb.salvo;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Player {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
+    private long id;
+    private String userName;
     private String firstName;
     private String lastName;
-    private String username;
 
+    //constructor vacio
     public Player() {
     }
 
-    public Player(String first, String last) {
-        firstName = first;
-        lastName = last;
+    //constructor con 3 parametros
+    public Player(String _username, String first, String last) {
+        this.userName = _username;
+        this.firstName = first;
+        this.lastName = last;
     }
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -24,22 +38,22 @@ public class Player {
     }
 
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-    public String getUsername() {
-        return this.username;
+    public String getUserName() {
+        return this.userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String toString() {
-        return firstName + " " + lastName;
+        return this.firstName + " " + this.lastName;
     }
 }
