@@ -2,10 +2,9 @@ package com.codeoftheweb.salvo;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Player {
@@ -17,6 +16,9 @@ public class Player {
     private String userName;
     private String firstName;
     private String lastName;
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    List<GamePlayer> gamePlayers;
 
     //constructor vacio
     public Player() {
@@ -56,4 +58,10 @@ public class Player {
     public String toString() {
         return this.firstName + " " + this.lastName;
     }
+
+    public List<Game> getGames() {
+        return gamePlayers.stream().map(gp -> gp.getGame()).collect(Collectors.toList());
+    }
+
+
 }

@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
+
 @SpringBootApplication
 public class SalvoApplication {
 
@@ -13,11 +15,28 @@ public class SalvoApplication {
     }
 
     @Bean
-    public CommandLineRunner initData(PlayerRepository repository) {
+    public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository) {
         return (args) -> {
-            repository.save(new Player("JackBauer", "Jack", "Bauer"));
-            repository.save(new Player("Chloe O ", "Chloe", "O'Brian"));
-            repository.save(new Player("KimB  ", "Kim", "Bauer"));
+            Player jackBauer = new Player("j.bauer", "Jack", "Bauer");
+            Player cObrian = new Player("c.obrian ", "Chloe", "O'Brian");
+            Player kimBauer = new Player("kim_bauer", "Kim", "Bauer");
+            Player tony = new Player("t.almeida", "Tony", "Almeida");
+            LocalDateTime fechaGame = LocalDateTime.of(2019, 10, 07, 01, 50);
+            Game game1 = new Game(fechaGame);
+            Game game2 = new Game(fechaGame.plusHours(1));
+            Game game3 = new Game(fechaGame.plusHours(2));
+            playerRepository.save(jackBauer);
+            playerRepository.save(cObrian);
+            playerRepository.save(kimBauer);
+            playerRepository.save(tony);
+            gameRepository.save(game1);
+            gameRepository.save(game2);
+            gameRepository.save(game3);
+            /*joinDate se crea inicializa sola cuando se crear un gamePleyer con LocalDateTime.now()*/
+            gamePlayerRepository.save(new GamePlayer(jackBauer, game1));
+            gamePlayerRepository.save(new GamePlayer(cObrian, game1));
+            gamePlayerRepository.save(new GamePlayer(cObrian, game2));
+            gamePlayerRepository.save(new GamePlayer(tony, game2));
         };
 
     }

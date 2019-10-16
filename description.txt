@@ -1,0 +1,3 @@
+S.O: Windows 10 Pro
+Java: jdk 8u221
+IntelliJ Community version
