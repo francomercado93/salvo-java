@@ -1,9 +1,12 @@
 package com.codeoftheweb.salvo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Entity
@@ -13,11 +16,35 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
+
+    @JsonIgnore
     private String userName;
+
+    @JsonIgnore
     private String firstName;
+
+    @JsonIgnore
     private String lastName;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    private String email;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     List<GamePlayer> gamePlayers;
 
     //constructor vacio
@@ -25,10 +52,11 @@ public class Player {
     }
 
     //constructor con 3 parametros
-    public Player(String _username, String first, String last) {
+    public Player(String _username, String first, String last, String email) {
         this.userName = _username;
         this.firstName = first;
         this.lastName = last;
+        this.email = email;
     }
 
     public String getFirstName() {
@@ -43,10 +71,6 @@ public class Player {
         return this.lastName;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getUserName() {
         return this.userName;
     }
@@ -59,9 +83,16 @@ public class Player {
         return this.firstName + " " + this.lastName;
     }
 
+    @JsonIgnore
     public List<Game> getGames() {
         return gamePlayers.stream().map(gp -> gp.getGame()).collect(Collectors.toList());
     }
 
+    public Map<String, Object> makeOwnerDTOPlayers() {
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", this.getId());
+        dto.put("email", this.getEmail());
+        return dto;
+    }
 
 }

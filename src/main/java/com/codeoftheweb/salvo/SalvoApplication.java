@@ -17,10 +17,10 @@ public class SalvoApplication {
     @Bean
     public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository) {
         return (args) -> {
-            Player jackBauer = new Player("j.bauer", "Jack", "Bauer");
-            Player cObrian = new Player("c.obrian ", "Chloe", "O'Brian");
-            Player kimBauer = new Player("kim_bauer", "Kim", "Bauer");
-            Player tony = new Player("t.almeida", "Tony", "Almeida");
+            Player jackBauer = new Player("j.bauer", "Jack", "Bauer", "j.bauer@ctu.gov");
+            Player cObrian = new Player("c.obrian ", "Chloe", "O'Brian", "c.obrian@ctu.gov");
+            Player kimBauer = new Player("kim_bauer", "Kim", "Bauer", "kim_bauer@ctu.gov");
+            Player tony = new Player("t.almeida", "Tony", "Almeida", "t.almeida@ctu.gov");
             LocalDateTime fechaGame = LocalDateTime.of(2019, 10, 07, 01, 50);
             Game game1 = new Game(fechaGame);
             Game game2 = new Game(fechaGame.plusHours(1));
@@ -35,8 +35,8 @@ public class SalvoApplication {
             /*joinDate se crea inicializa sola cuando se crear un gamePleyer con LocalDateTime.now()*/
             gamePlayerRepository.save(new GamePlayer(jackBauer, game1));
             gamePlayerRepository.save(new GamePlayer(cObrian, game1));
-            gamePlayerRepository.save(new GamePlayer(cObrian, game2));
             gamePlayerRepository.save(new GamePlayer(tony, game2));
+            gamePlayerRepository.save(new GamePlayer(kimBauer, game2));
         };
 
     }

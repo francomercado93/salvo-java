@@ -5,7 +5,10 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
@@ -16,18 +19,35 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    public long id;
+    private long id;
 
     private LocalDateTime created;
 
-    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    Set<GamePlayer> gamePlayers;
+    //Buscar mappedBy
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    private Set<GamePlayer> gamePlayers;
 
     public Game() {
     }
 
     public Game(LocalDateTime created) {
         this.created = created;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
     }
 
     public LocalDateTime getCreated() {
@@ -42,4 +62,26 @@ public class Game {
     public List<Player> getPlayers() {
         return this.gamePlayers.stream().map(gamePlayer -> gamePlayer.getPlayer()).collect(toList());
     }
+
+    //Creamos nuestro propio DTO(Data transfer object)
+    public Map<String, Object> makeOwnerDTOGames() {
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", this.getId());
+        dto.put("created", this.convertDateToMiliseconds());
+        dto.put("gamePlayers", this.getGamePlayers()
+                .stream()
+                .map(gp -> gp.makeOwnerDtoGamePlayer())
+                .collect(toList()));
+        return dto;
+    }
+
+    private long convertDateToMiliseconds() {
+        return this.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    /*private List<Object> makeDtosGamePlayers(){
+        return this.gamePlayers.stream().map(gp -> gp.makeOwnerDtoGamePlayer()).collect(toList());
+    }*/
+
+//this.getPlayers().stream().map(player -> player.makeOwnerDTOPlayers()).collect(toList())
 }
