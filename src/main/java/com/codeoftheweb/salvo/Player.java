@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,16 +18,16 @@ public class Player {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    @JsonIgnore
     private String userName;
 
-    @JsonIgnore
     private String firstName;
 
-    @JsonIgnore
     private String lastName;
 
     private String email;
+
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    List<GamePlayer> gamePlayers = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -43,9 +44,6 @@ public class Player {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    List<GamePlayer> gamePlayers;
 
     //constructor vacio
     public Player() {

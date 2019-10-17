@@ -1,13 +1,14 @@
 package com.codeoftheweb.salvo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Entity
 public class GamePlayer {
@@ -23,10 +24,15 @@ public class GamePlayer {
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     private Game game;
+
+    //fetchType.EAGER para traerme todos los datos de la tabla GamePlayer y las entradas de la tabla ships que tienen
+    //La clave foranea de gamePlayer1
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "gamePlayerID")
+    Set<Ship> ships = new HashSet<>();
 
     public Player getPlayer() {
         return player;
@@ -66,5 +72,9 @@ public class GamePlayer {
         dto.put("id", this.getId());
         dto.put("player", this.getPlayer().makeOwnerDTOPlayers());
         return dto;
+    }
+
+    public void addShip(Ship ship) {
+        ships.add(ship);
     }
 }

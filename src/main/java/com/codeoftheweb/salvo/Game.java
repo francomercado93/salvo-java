@@ -6,10 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -25,7 +22,7 @@ public class Game {
 
     //Buscar mappedBy
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
-    private Set<GamePlayer> gamePlayers;
+    private Set<GamePlayer> gamePlayers = new HashSet<>();
 
     public Game() {
     }
@@ -79,9 +76,4 @@ public class Game {
         return this.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
-    /*private List<Object> makeDtosGamePlayers(){
-        return this.gamePlayers.stream().map(gp -> gp.makeOwnerDtoGamePlayer()).collect(toList());
-    }*/
-
-//this.getPlayers().stream().map(player -> player.makeOwnerDTOPlayers()).collect(toList())
 }

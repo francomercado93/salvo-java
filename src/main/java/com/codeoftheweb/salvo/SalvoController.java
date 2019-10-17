@@ -34,5 +34,10 @@ public class SalvoController {
         return playerRepository.findAll().stream().map(owner -> owner.makeOwnerDTOPlayers()).collect(Collectors.toList());
     }
 
+    @RequestMapping("/mi-ruta")
+    public Object getTest() {
+        return "Hello World";
+    }
+
 
 }
