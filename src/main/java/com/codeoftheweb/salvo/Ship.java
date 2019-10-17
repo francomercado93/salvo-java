@@ -4,7 +4,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Ship {
@@ -57,5 +59,12 @@ public class Ship {
 
     public void addLocations(List<String> locations) {
         cells.addAll(locations);
+    }
+
+    public Object makeDTOShip() {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("type", this.type);
+        dto.put("locations", this.cells);
+        return dto;
     }
 }

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -69,6 +70,7 @@ public class Game {
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())
                 .collect(toList()));
+        ;
         return dto;
     }
 

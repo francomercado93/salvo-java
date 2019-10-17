@@ -5,10 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class GamePlayer {
@@ -76,5 +74,16 @@ public class GamePlayer {
 
     public void addShip(Ship ship) {
         ships.add(ship);
+    }
+
+    public Set<Ship> getShips() {
+        return ships;
+    }
+
+    public Object makeOwnerDTOGamePlayer() {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("id", this.getId());
+        dto.put("id", this.getId());
+        return dto;
     }
 }
