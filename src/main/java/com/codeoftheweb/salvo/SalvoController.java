@@ -53,7 +53,6 @@ public class SalvoController {
                 .map(ship -> ship.makeDTOShip())
                 .collect(Collectors.toList()));
 
-        /*Devuelve una lista de lista*/
         dto.put("salvoes", game.getGamePlayers()
                 .stream()
                 .flatMap(gp -> gp.getSalvoes()
