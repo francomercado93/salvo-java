@@ -40,24 +40,17 @@ public class SalvoController {
         return playerRepository.findAll().stream().map(owner -> owner.makeOwnerDTOPlayers()).collect(Collectors.toList());
     }
 
-   /* @RequestMapping("/game_view/{nn}")
+    //Le paso el id de gamePlayer y en el json el primer id es el del game
+    @RequestMapping("/game_view/{nn}")
     public Map<String, Object> getGamePlayerInformation(@PathVariable Long nn) {
         GamePlayer gamePlayer = gamePlayerRepository.findById(nn).get();
-        Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("id", gamePlayer.getPlayer().getId());
-        dto.put("created", gamePlayer.getGame().getCreated());
-
-        /*dto.put("gamePlayers", gamePlayer.getGame().getGamePlayers()
-                .stream()
-                .map(gp -> gp.makeOwnerDtoGamePlayer())
-                .collect(Collectors.toList()));
-        */
-
-        /*dto.put("ships", gamePlayer.getShips()
+        Game game = gamePlayer.getGame();
+        //Reutilizo el DTO del game y le agrego los barcos del player
+        Map<String, Object> dto = game.makeOwnerDTOGames();
+        dto.put("ships", gamePlayer.getShips()
                 .stream()
                 .map(ship -> ship.makeDTOShip())
-                .collect(Collectors.toList()))
-        ;
-        return gamePlayer.getGame().makeOwnerDTOGames();
-    }*/
+                .collect(Collectors.toList()));
+        return dto;
+    }
 }

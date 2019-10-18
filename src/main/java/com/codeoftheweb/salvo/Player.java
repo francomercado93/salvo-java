@@ -26,6 +26,18 @@ public class Player {
 
     private String email;
 
+    //constructor vacio
+    public Player() {
+    }
+
+    //constructor con 3 parametros
+    public Player(String _username, String first, String last, String email) {
+        this.userName = _username;
+        this.firstName = first;
+        this.lastName = last;
+        this.email = email;
+    }
+
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     List<GamePlayer> gamePlayers = new ArrayList<>();
 
@@ -42,18 +54,6 @@ public class Player {
     }
 
     public void setEmail(String email) {
-        this.email = email;
-    }
-
-    //constructor vacio
-    public Player() {
-    }
-
-    //constructor con 3 parametros
-    public Player(String _username, String first, String last, String email) {
-        this.userName = _username;
-        this.firstName = first;
-        this.lastName = last;
         this.email = email;
     }
 

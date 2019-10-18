@@ -34,11 +34,17 @@ public class SalvoApplication {
     @Bean
     public CommandLineRunner initData() {
         return (args) -> {
+
+            /*Players*/
             Player jackBauer = new Player("j.bauer", "Jack", "Bauer", "j.bauer@ctu.gov");
             Player cObrian = new Player("c.obrian ", "Chloe", "O'Brian", "c.obrian@ctu.gov");
             Player kimBauer = new Player("kim_bauer", "Kim", "Bauer", "kim_bauer@ctu.gov");
             Player tony = new Player("t.almeida", "Tony", "Almeida", "t.almeida@ctu.gov");
+
             LocalDateTime fechaGame = LocalDateTime.of(2019, 10, 07, 01, 50);
+
+            /*Games*/
+
             Game game1 = new Game(fechaGame);
             Game game2 = new Game(fechaGame.plusHours(1));
             Game game3 = new Game(fechaGame.plusHours(2));
@@ -47,6 +53,7 @@ public class SalvoApplication {
             Game game6 = new Game(fechaGame.plusHours(5));
             Game game7 = new Game(fechaGame.plusHours(6));
             Game game8 = new Game(fechaGame.plusHours(7));
+
             playerRepository.save(jackBauer);
             playerRepository.save(cObrian);
             playerRepository.save(kimBauer);
@@ -59,7 +66,9 @@ public class SalvoApplication {
             gameRepository.save(game6);
             gameRepository.save(game7);
             gameRepository.save(game8);
-            /*joinDate se crea inicializa sola cuando se crear un gamePleyer con LocalDateTime.now()*/
+
+            /*Game players*/
+            /*joinDate se crea inicializa sola cuando se crear un gamePlayer con LocalDateTime.now()*/
             GamePlayer gamePlayerJG1 = new GamePlayer(jackBauer, game1);
             GamePlayer gamePlayerCG1 = new GamePlayer(cObrian, game1);
             GamePlayer gamePlayerJG2 = new GamePlayer(jackBauer, game2);
@@ -71,7 +80,7 @@ public class SalvoApplication {
             GamePlayer gamePlayerTG5 = new GamePlayer(tony, game5);
             GamePlayer gamePlayerJG5 = new GamePlayer(jackBauer, game5);
             GamePlayer gamePlayerKG6 = new GamePlayer(kimBauer, game6);
-            GamePlayer gamePlayerTG7 = new GamePlayer(tony, game7);
+            GamePlayer gamePlayerTG8 = new GamePlayer(tony, game8);
             GamePlayer gamePlayerKG8 = new GamePlayer(kimBauer, game8);
 
             /* SHIPS */
@@ -89,8 +98,23 @@ public class SalvoApplication {
             Ship patrolBoatCGP3 = new Ship("Patrol Boat");
             Ship submarineTGP3 = new Ship("Submarine");
             Ship patrolBoatTGP3 = new Ship("Patrol Boat");
+            Ship destroyerCGP4 = new Ship("Destroyer");
+            Ship patrolBeatCGP4 = new Ship("Patrol Boat");
+            Ship submarineJGP4 = new Ship("Submarine");
+            Ship patrolBoatJGP4 = new Ship("Patrol Boat");
+            Ship destroyerTGP5 = new Ship("Submarine");
+            Ship patrolBoatTGP5 = new Ship("Patrol Boat");
+            Ship submarineJGP5 = new Ship("Submarine");
+            Ship patrolBoatJGP5 = new Ship("Patrol Boat");
+            Ship destroyerKGP6 = new Ship("Destroyer");
+            Ship patrolBoatKGP6 = new Ship("Patrol Boat");
+            Ship destroyerTGP8 = new Ship("Destroyer");
+            Ship submarineTGP8 = new Ship("Submarine");
+            Ship patrolBoatTGP8 = new Ship("Patrol Boat");
+            Ship patrolBoatKGP8 = new Ship("Patrol Boat");
 
             /*LOCACIONES*/
+
             carrierJGP1.addLocations(Arrays.asList("H2", "H3", "H4"));
             submarineJGP1.addLocations(Arrays.asList("E1", "F1", "G1"));
             patrolBoatJGP1.addLocations(Arrays.asList("B4", "B5"));
@@ -104,21 +128,20 @@ public class SalvoApplication {
             patrolBoatCGP3.addLocations(Arrays.asList("C6", "C7"));
             submarineTGP3.addLocations(Arrays.asList("A2", "A3", "A4"));
             patrolBoatTGP3.addLocations(Arrays.asList("G6", "H6"));
-            //Ship battleship = new Ship("Battleship");
-
-            shipRepository.save(carrierJGP1);
-            shipRepository.save(submarineJGP1);
-            shipRepository.save(patrolBoatJGP1);
-            shipRepository.save(destroyerCGP1);
-            shipRepository.save(patrolBoatCGP1);
-            shipRepository.save(destroyerJGP2);
-            shipRepository.save(patrolBoatJGP2);
-            shipRepository.save(submarineCGP2);
-            shipRepository.save(patrolBoatCGP2);
-            shipRepository.save(destroyerCGP3);
-            shipRepository.save(patrolBoatCGP3);
-            shipRepository.save(submarineTGP3);
-            shipRepository.save(patrolBoatTGP3);
+            destroyerCGP4.addLocations(Arrays.asList("B5", "C5", "D5"));
+            patrolBeatCGP4.addLocations(Arrays.asList("C6", "C7"));
+            submarineJGP4.addLocations(Arrays.asList("A2", "A3", "A4"));
+            patrolBoatJGP4.addLocations(Arrays.asList("G6", "H6"));
+            destroyerTGP5.addLocations(Arrays.asList("B5", "C5", "D5"));
+            patrolBoatTGP5.addLocations(Arrays.asList("G6", "H6"));
+            submarineJGP5.addLocations(Arrays.asList("A2", "A3", "A4"));
+            patrolBoatJGP5.addLocations(Arrays.asList("G6", "H6"));
+            destroyerKGP6.addLocations(Arrays.asList("B5", "C5", "D5"));
+            patrolBoatKGP6.addLocations(Arrays.asList("C6", "C7"));
+            destroyerTGP8.addLocations(Arrays.asList("B5", "C5", "D5"));
+            submarineTGP8.addLocations(Arrays.asList("A2", "A3", "A4"));
+            patrolBoatTGP8.addLocations(Arrays.asList("G6", "H6"));
+            patrolBoatKGP8.addLocations(Arrays.asList("C6", "C7"));
 
             gamePlayerJG1.addShip(carrierJGP1);
             gamePlayerJG1.addShip(submarineJGP1);
@@ -133,19 +156,66 @@ public class SalvoApplication {
             gamePlayerCG3.addShip(patrolBoatCGP3);
             gamePlayerTG3.addShip(submarineTGP3);
             gamePlayerTG3.addShip(patrolBoatTGP3);
+            gamePlayerCG4.addShip(destroyerCGP4);
+            gamePlayerCG4.addShip(patrolBeatCGP4);
+            gamePlayerJG4.addShip(submarineJGP4);
+            gamePlayerJG4.addShip(patrolBoatJGP4);
+            gamePlayerTG5.addShip(destroyerTGP5);
+            gamePlayerTG5.addShip(patrolBoatTGP5);
+            gamePlayerJG5.addShip(submarineJGP5);
+            gamePlayerJG5.addShip(patrolBoatJGP5);
+            gamePlayerKG6.addShip(destroyerKGP6);
+            gamePlayerKG6.addShip(patrolBoatKGP6);
+            gamePlayerKG8.addShip(destroyerKGP6);
+            gamePlayerTG8.addShip(destroyerTGP8);
+            gamePlayerTG8.addShip(submarineTGP8);
+            gamePlayerTG8.addShip(patrolBoatTGP8);
+            gamePlayerKG8.addShip(patrolBoatKGP8);
+
             gamePlayerRepository.save(gamePlayerJG1);
             gamePlayerRepository.save(gamePlayerCG1);
             gamePlayerRepository.save(gamePlayerJG2);
             gamePlayerRepository.save(gamePlayerCG2);
             gamePlayerRepository.save(gamePlayerCG3);
             gamePlayerRepository.save(gamePlayerTG3);
-            /*gamePlayerRepository.save(gamePlayerCG4);
+            gamePlayerRepository.save(gamePlayerCG4);
             gamePlayerRepository.save(gamePlayerJG4);
             gamePlayerRepository.save(gamePlayerTG5);
             gamePlayerRepository.save(gamePlayerJG5);
             gamePlayerRepository.save(gamePlayerKG6);
-            gamePlayerRepository.save(gamePlayerTG7);
-            gamePlayerRepository.save(gamePlayerKG8);*/
+            gamePlayerRepository.save(gamePlayerTG8);
+            gamePlayerRepository.save(gamePlayerKG8);
+
+            /*Guardo los gamePlayers primero para que se creen los ids  y luego puedo guardar las claves foraneas de
+            los gamePlayers en la tabla ship*/
+
+            shipRepository.save(carrierJGP1);
+            shipRepository.save(submarineJGP1);
+            shipRepository.save(patrolBoatJGP1);
+            shipRepository.save(destroyerCGP1);
+            shipRepository.save(patrolBoatCGP1);
+            shipRepository.save(destroyerJGP2);
+            shipRepository.save(patrolBoatJGP2);
+            shipRepository.save(submarineCGP2);
+            shipRepository.save(patrolBoatCGP2);
+            shipRepository.save(destroyerCGP3);
+            shipRepository.save(patrolBoatCGP3);
+            shipRepository.save(submarineTGP3);
+            shipRepository.save(patrolBoatTGP3);
+            shipRepository.save(destroyerCGP4);
+            shipRepository.save(patrolBeatCGP4);
+            shipRepository.save(submarineJGP4);
+            shipRepository.save(patrolBeatCGP4);
+            shipRepository.save(destroyerTGP5);
+            shipRepository.save(patrolBoatTGP5);
+            shipRepository.save(submarineJGP5);
+            shipRepository.save(patrolBoatJGP5);
+            shipRepository.save(destroyerKGP6);
+            shipRepository.save(patrolBoatKGP6);
+            shipRepository.save(destroyerTGP8);
+            shipRepository.save(submarineTGP8);
+            shipRepository.save(patrolBoatTGP8);
+            shipRepository.save(patrolBoatKGP8);
         };
     }
 }

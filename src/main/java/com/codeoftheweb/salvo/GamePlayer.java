@@ -23,14 +23,20 @@ public class GamePlayer {
     private Player player;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "game_id")
+    @JoinColumn(name = "gamePlayer_id")
     private Game game;
 
-    //fetchType.EAGER para traerme todos los datos de la tabla GamePlayer y las entradas de la tabla ships que tienen
-    //La clave foranea de gamePlayer1
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gamePlayerID")
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     Set<Ship> ships = new HashSet<>();
+
+    public GamePlayer() {
+    }
+
+    public GamePlayer(Player player, Game game) {
+        this.player = player;
+        this.game = game;
+        this.joinDate = LocalDateTime.now();
+    }
 
     public Player getPlayer() {
         return player;
@@ -56,15 +62,6 @@ public class GamePlayer {
         this.game = game;
     }
 
-    public GamePlayer() {
-    }
-
-    public GamePlayer(Player player, Game game) {
-        this.player = player;
-        this.game = game;
-        this.joinDate = LocalDateTime.now();
-    }
-
     public Map<String, Object> makeOwnerDtoGamePlayer() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
@@ -73,6 +70,7 @@ public class GamePlayer {
     }
 
     public void addShip(Ship ship) {
+        ship.setGamePlayer(this);
         ships.add(ship);
     }
 
@@ -80,10 +78,4 @@ public class GamePlayer {
         return ships;
     }
 
-    public Object makeOwnerDTOGamePlayer() {
-        Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("id", this.getId());
-        dto.put("id", this.getId());
-        return dto;
-    }
 }

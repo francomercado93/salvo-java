@@ -21,7 +21,6 @@ public class Game {
 
     private LocalDateTime created;
 
-    //Buscar mappedBy
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers = new HashSet<>();
 

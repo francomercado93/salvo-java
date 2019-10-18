@@ -16,13 +16,22 @@ public class Ship {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    /*ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gamePlayerID")
-    private GamePlayer gamePlayer;
-*/
     @ElementCollection  //Crea una nueva tabla que tiene las celdas y el id del barco
     @Column(name = "cell")    //Cambia el nombre de la columna de cells a cell
     private List<String> cells = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "gamePlayerID")
+    private GamePlayer gamePlayer;
+
+
+    public GamePlayer getGamePlayer() {
+        return gamePlayer;
+    }
+
+    public void setGamePlayer(GamePlayer gamePlayer) {
+        this.gamePlayer = gamePlayer;
+    }
 
     private String type;
 
@@ -40,14 +49,6 @@ public class Ship {
     public void setId(long id) {
         this.id = id;
     }
-
-    /*public GamePlayer getGamePlayer() {
-        return gamePlayer;
-    }
-
-    public void setGamePlayer(GamePlayer gamePlayer) {
-        this.gamePlayer = gamePlayer;
-    }*/
 
     public String getType() {
         return type;
