@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,13 @@ public class SalvoController {
                 .stream()
                 .map(ship -> ship.makeDTOShip())
                 .collect(Collectors.toList()));
+
+        /*Devuelve una lista de lista*/
+        dto.put("salvoes", game.getGamePlayers()
+                .stream()
+                .flatMap(gp -> gp.getSalvoes()
+                        .stream()
+                        .map(salvo -> salvo.makeDTOSalvo())));
         return dto;
     }
 }

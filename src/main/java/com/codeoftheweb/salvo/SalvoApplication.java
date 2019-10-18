@@ -7,10 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
 @SpringBootApplication
 public class SalvoApplication {
@@ -26,6 +24,9 @@ public class SalvoApplication {
 
     @Autowired
     private ShipRepository shipRepository;
+
+    @Autowired
+    private SalvoRepository salvoRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(SalvoApplication.class, args);
@@ -216,6 +217,38 @@ public class SalvoApplication {
             shipRepository.save(submarineTGP8);
             shipRepository.save(patrolBoatTGP8);
             shipRepository.save(patrolBoatKGP8);
+
+            Salvo salvo1 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "C5", "F1")));
+            Salvo salvo3 = new Salvo(2, new HashSet<>(Arrays.asList("F2", "D5")));
+            Salvo salvo2 = new Salvo(1, new HashSet<>(Arrays.asList("B4", "B5", "B6")));
+            Salvo salvo4 = new Salvo(2, new HashSet<>(Arrays.asList("E1", "H3", "A2")));
+            Salvo salvo5 = new Salvo(1, new HashSet<>(Arrays.asList("A2", "A4", "A6")));
+            Salvo salvo7 = new Salvo(2, new HashSet<>(Arrays.asList("A3", "H6")));
+            Salvo salvo6 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "D5", "C7")));
+            Salvo salvo8 = new Salvo(2, new HashSet<>(Arrays.asList("C5", "C6")));
+            Salvo salvo9 = new Salvo(1, new HashSet<>(Arrays.asList("G6", "H6", "A4")));
+            Salvo salvo11 = new Salvo(2, new HashSet<>(Arrays.asList("A2", "A3", "D8")));
+            Salvo salvo10 = new Salvo(1, new HashSet<>(Arrays.asList("H1", "H2", "H3")));
+            Salvo salvo12 = new Salvo(2, new HashSet<>(Arrays.asList("E1", "F2", "G3")));
+
+            gamePlayerJG1.addSalvoes(new HashSet<>(Arrays.asList(salvo1, salvo3)));
+            gamePlayerCG1.addSalvoes(new HashSet<>(Arrays.asList(salvo2, salvo4)));
+            gamePlayerJG2.addSalvoes(new HashSet<>(Arrays.asList(salvo5, salvo7)));
+            gamePlayerCG2.addSalvoes(new HashSet<>(Arrays.asList(salvo6, salvo8)));
+            gamePlayerTG3.addSalvoes(new HashSet<>(Arrays.asList(salvo10, salvo12)));
+            gamePlayerCG3.addSalvoes(new HashSet<>(Arrays.asList(salvo9, salvo11)));
+            salvoRepository.save(salvo1);
+            salvoRepository.save(salvo2);
+            salvoRepository.save(salvo3);
+            salvoRepository.save(salvo4);
+            salvoRepository.save(salvo5);
+            salvoRepository.save(salvo6);
+            salvoRepository.save(salvo7);
+            salvoRepository.save(salvo8);
+            salvoRepository.save(salvo9);
+            salvoRepository.save(salvo10);
+            salvoRepository.save(salvo11);
+            salvoRepository.save(salvo12);
         };
     }
 }

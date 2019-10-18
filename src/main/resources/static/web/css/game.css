@@ -7,14 +7,9 @@
 }
 
 .salvo{
+
+}
+
+.salvo-piece{
     background-color: crimson;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-}
-
-.full-width {
-    width: 70%;
 }

@@ -1,12 +1,13 @@
 package com.codeoftheweb.salvo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Entity
 public class GamePlayer {
@@ -23,11 +24,14 @@ public class GamePlayer {
     private Player player;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gamePlayer_id")
+    @JoinColumn(name = "game_id")
     private Game game;
 
     @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
     Set<Ship> ships = new HashSet<>();
+
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    Set<Salvo> salvoes = new HashSet<>();
 
     public GamePlayer() {
     }
@@ -74,8 +78,32 @@ public class GamePlayer {
         ships.add(ship);
     }
 
+    public void setShips(Set<Ship> ships) {
+        this.ships = ships;
+    }
+
     public Set<Ship> getShips() {
         return ships;
     }
 
+    public LocalDateTime getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(LocalDateTime joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public Set<Salvo> getSalvoes() {
+        return salvoes;
+    }
+
+    public void setSalvoes(Set<Salvo> salvoes) {
+        this.salvoes = salvoes;
+    }
+
+    public void addSalvoes(Set<Salvo> newSalvoes) {
+        newSalvoes.forEach(salvo -> salvo.setGamePlayer(this));
+        salvoes.addAll(newSalvoes);
+    }
 }

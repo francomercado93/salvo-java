@@ -18,6 +18,7 @@ public class Ship {
 
     @ElementCollection  //Crea una nueva tabla que tiene las celdas y el id del barco
     @Column(name = "cell")    //Cambia el nombre de la columna de cells a cell
+    /*Cambiar por set ?*/
     private List<String> cells = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
