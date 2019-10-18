@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -64,16 +63,15 @@ public class Game {
     public Map<String, Object> makeOwnerDTOGames() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
-        dto.put("created", this.convertDateToMiliseconds());
+        dto.put("created", this.convertDateToMilliseconds());
         dto.put("gamePlayers", this.getGamePlayers()
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())
                 .collect(toList()));
-        ;
         return dto;
     }
 
-    private long convertDateToMiliseconds() {
+    private long convertDateToMilliseconds() {
         return this.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
