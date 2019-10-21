@@ -68,4 +68,15 @@ public class Ship {
         dto.put("locations", this.cells);
         return dto;
     }
+
+    public long length() {
+        return cells.stream().count();
+    }
+
+    /*
+    public Boolean isSunk(Set<Salvo> salvoes) {
+        return this.cells.stream().allMatch(cell -> salvoes.cells)
+    }
+
+     */
 }

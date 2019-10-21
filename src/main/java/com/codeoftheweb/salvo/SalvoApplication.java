@@ -1,11 +1,13 @@
 package com.codeoftheweb.salvo;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,6 +29,9 @@ public class SalvoApplication {
 
     @Autowired
     private SalvoRepository salvoRepository;
+
+    @Autowired
+    private ScoreRepository scoreRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(SalvoApplication.class, args);
@@ -237,6 +242,7 @@ public class SalvoApplication {
             gamePlayerCG2.addSalvoes(new HashSet<>(Arrays.asList(salvo6, salvo8)));
             gamePlayerTG3.addSalvoes(new HashSet<>(Arrays.asList(salvo10, salvo12)));
             gamePlayerCG3.addSalvoes(new HashSet<>(Arrays.asList(salvo9, salvo11)));
+
             salvoRepository.save(salvo1);
             salvoRepository.save(salvo2);
             salvoRepository.save(salvo3);
@@ -249,6 +255,36 @@ public class SalvoApplication {
             salvoRepository.save(salvo10);
             salvoRepository.save(salvo11);
             salvoRepository.save(salvo12);
+
+            Score score1 = new Score(game1, jackBauer, new BigDecimal(1), LocalDateTime.now());
+            Score score2 = new Score(game1, cObrian, new BigDecimal(0), LocalDateTime.now());
+            Score score3 = new Score(game2, jackBauer, new BigDecimal(0.5), LocalDateTime.now());
+            Score score4 = new Score(game2, cObrian, new BigDecimal(0.5), LocalDateTime.now());
+            Score score5 = new Score(game3, cObrian, new BigDecimal(0), LocalDateTime.now());
+            Score score6 = new Score(game3, tony, new BigDecimal(1), LocalDateTime.now());
+            Score score7 = new Score(game4, cObrian, new BigDecimal(0.5), LocalDateTime.now());
+            Score score8 = new Score(game4, jackBauer, new BigDecimal(0.5), LocalDateTime.now());
+            Score score9 = new Score(game5, tony, new BigDecimal(1), LocalDateTime.now());
+            Score score10 = new Score(game5, jackBauer, new BigDecimal(0), LocalDateTime.now());
+            Score score11 = new Score(game6, kimBauer);
+            Score score12 = new Score(game7, tony);
+            Score score13 = new Score(game8, kimBauer, new BigDecimal(0.5), LocalDateTime.now());
+            Score score14 = new Score(game8, tony, new BigDecimal(0.5), LocalDateTime.now());
+
+            scoreRepository.save(score1);
+            scoreRepository.save(score2);
+            scoreRepository.save(score3);
+            scoreRepository.save(score4);
+            scoreRepository.save(score5);
+            scoreRepository.save(score6);
+            scoreRepository.save(score7);
+            scoreRepository.save(score8);
+            scoreRepository.save(score9);
+            scoreRepository.save(score10);
+            scoreRepository.save(score11);
+            scoreRepository.save(score12);
+            scoreRepository.save(score13);
+            scoreRepository.save(score14);
         };
     }
 }

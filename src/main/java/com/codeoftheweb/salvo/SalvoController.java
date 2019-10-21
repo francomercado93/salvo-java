@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,6 +34,13 @@ public class SalvoController {
 
     //Obtenemos un json con todos los juegos con un formato que elegimos
     @RequestMapping("/games")
+    public Map getAllGamesDTO() {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("player", "Guest");
+        dto.put("games", this.getAllGames());
+        return dto;
+    }
+
     public List<Object> getAllGames() {
         return gameRepository.findAll()
                 .stream()

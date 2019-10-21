@@ -23,11 +23,22 @@ public class Game {
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers = new HashSet<>();
 
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    private List<Score> scores = new ArrayList<>();
+
     public Game() {
     }
 
     public Game(LocalDateTime created) {
         this.created = created;
+    }
+
+    public List<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(List<Score> scores) {
+        this.scores = scores;
     }
 
     public long getId() {
@@ -56,7 +67,10 @@ public class Game {
 
     @JsonIgnore
     public List<Player> getPlayers() {
-        return this.gamePlayers.stream().map(gamePlayer -> gamePlayer.getPlayer()).collect(toList());
+        return this.gamePlayers
+                .stream()
+                .map(gamePlayer -> gamePlayer.getPlayer())
+                .collect(toList());
     }
 
     //Creamos nuestro propio DTO(Data transfer object)
@@ -64,9 +78,13 @@ public class Game {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
         dto.put("created", this.convertDateToMilliseconds());
-        dto.put("gamePlayers", this.getGamePlayers()
+        dto.put("gamePlayers", gamePlayers
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())
+                .collect(toList()));
+        dto.put("scores", gamePlayers
+                .stream()
+                .map(gp -> gp.getScore().makeDTOScore())
                 .collect(toList()));
         return dto;
     }
@@ -75,4 +93,7 @@ public class Game {
         return this.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
+    public void addScore(Score score1) {
+        scores.add(score1);
+    }
 }

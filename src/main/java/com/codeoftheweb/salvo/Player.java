@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,11 +27,18 @@ public class Player {
 
     private String email;
 
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    List<GamePlayer> gamePlayers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    private List<Score> scores = new ArrayList<>();
+
     //constructor vacio
+
     public Player() {
     }
-
     //constructor con 3 parametros
+
     public Player(String _username, String first, String last, String email) {
         this.userName = _username;
         this.firstName = first;
@@ -38,8 +46,9 @@ public class Player {
         this.email = email;
     }
 
-    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    List<GamePlayer> gamePlayers = new ArrayList<>();
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public long getId() {
         return id;
@@ -93,4 +102,30 @@ public class Player {
         return dto;
     }
 
+    public List<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(List<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
+
+    public List<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(List<Score> scores) {
+        this.scores = scores;
+    }
+
+    public Score getScore(Game game) {
+        return this.getScores()
+                .stream()
+                .filter(score -> score.getGame().getId() == game.getId())
+                .findFirst().orElse(null);
+    }
+
+    public void addScore(Score score) {
+        scores.add(score);
+    }
 }
