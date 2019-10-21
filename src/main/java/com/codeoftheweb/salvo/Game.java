@@ -78,10 +78,4 @@ public class Game {
     private long convertDateToMiliseconds() {
         return this.getCreated().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
-
-    /*private List<Object> makeDtosGamePlayers(){
-        return this.gamePlayers.stream().map(gp -> gp.makeOwnerDtoGamePlayer()).collect(toList());
-    }*/
-
-//this.getPlayers().stream().map(player -> player.makeOwnerDTOPlayers()).collect(toList())
 }

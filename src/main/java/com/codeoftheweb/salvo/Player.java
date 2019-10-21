@@ -17,16 +17,28 @@ public class Player {
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
 
-    @JsonIgnore
     private String userName;
 
-    @JsonIgnore
     private String firstName;
 
-    @JsonIgnore
     private String lastName;
 
     private String email;
+
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    List<GamePlayer> gamePlayers;
+
+    //constructor vacio
+    public Player() {
+    }
+    //constructor con 3 parametros
+
+    public Player(String _username, String first, String last, String email) {
+        this.userName = _username;
+        this.firstName = first;
+        this.lastName = last;
+        this.email = email;
+    }
 
     public long getId() {
         return id;
@@ -41,21 +53,6 @@ public class Player {
     }
 
     public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
-    List<GamePlayer> gamePlayers;
-
-    //constructor vacio
-    public Player() {
-    }
-
-    //constructor con 3 parametros
-    public Player(String _username, String first, String last, String email) {
-        this.userName = _username;
-        this.firstName = first;
-        this.lastName = last;
         this.email = email;
     }
 
