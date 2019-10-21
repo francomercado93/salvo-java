@@ -1,7 +1,6 @@
 package com.codeoftheweb.salvo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.tomcat.jni.Local;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,7 +14,7 @@ public class GamePlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    public long id;
+    private long id;
 
     private LocalDateTime joinDate;
 
@@ -23,10 +22,18 @@ public class GamePlayer {
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     private Game game;
+
+    public GamePlayer() {
+    }
+
+    public GamePlayer(Player player, Game game) {
+        this.player = player;
+        this.game = game;
+        this.joinDate = LocalDateTime.now();
+    }
 
     public Player getPlayer() {
         return player;
@@ -50,15 +57,6 @@ public class GamePlayer {
 
     public void setGame(Game game) {
         this.game = game;
-    }
-
-    public GamePlayer() {
-    }
-
-    public GamePlayer(Player player, Game game) {
-        this.player = player;
-        this.game = game;
-        this.joinDate = LocalDateTime.now();
     }
 
     public Map<String, Object> makeOwnerDtoGamePlayer() {
