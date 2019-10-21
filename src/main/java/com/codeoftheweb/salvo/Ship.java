@@ -25,7 +25,6 @@ public class Ship {
     @JoinColumn(name = "gamePlayerID")
     private GamePlayer gamePlayer;
 
-
     public GamePlayer getGamePlayer() {
         return gamePlayer;
     }
