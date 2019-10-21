@@ -236,6 +236,15 @@ public class SalvoApplication {
             Salvo salvo11 = new Salvo(2, new HashSet<>(Arrays.asList("A2", "A3", "D8")));
             Salvo salvo10 = new Salvo(1, new HashSet<>(Arrays.asList("H1", "H2", "H3")));
             Salvo salvo12 = new Salvo(2, new HashSet<>(Arrays.asList("E1", "F2", "G3")));
+            Salvo salvo13 = new Salvo(1, new HashSet<>(Arrays.asList("A3", "A4", "F7")));
+            Salvo salvo14 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "C6", "H1")));
+            Salvo salvo15 = new Salvo(2, new HashSet<>(Arrays.asList("A2", "G6", "H6")));
+            Salvo salvo16 = new Salvo(2, new HashSet<>(Arrays.asList("C5", "C7", "D5")));
+            Salvo salvo17 = new Salvo(1, new HashSet<>(Arrays.asList("A1", "A2", "A3")));
+            Salvo salvo18 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "B6", "B7")));
+            Salvo salvo19 = new Salvo(2, new HashSet<>(Arrays.asList("G6", "G7", "G8")));
+            Salvo salvo20 = new Salvo(2, new HashSet<>(Arrays.asList("C6", "D6", "E6")));
+//            Salvo salvo21 = new Salvo(3, new HashSet<>(Arrays.asList("H1", "H8")));
 
             gamePlayerJG1.addSalvoes(new HashSet<>(Arrays.asList(salvo1, salvo3)));
             gamePlayerCG1.addSalvoes(new HashSet<>(Arrays.asList(salvo2, salvo4)));
@@ -243,6 +252,10 @@ public class SalvoApplication {
             gamePlayerCG2.addSalvoes(new HashSet<>(Arrays.asList(salvo6, salvo8)));
             gamePlayerTG3.addSalvoes(new HashSet<>(Arrays.asList(salvo10, salvo12)));
             gamePlayerCG3.addSalvoes(new HashSet<>(Arrays.asList(salvo9, salvo11)));
+            gamePlayerCG4.addSalvoes(new HashSet<>(Arrays.asList(salvo13, salvo15)));
+            gamePlayerJG4.addSalvoes(new HashSet<>(Arrays.asList(salvo14, salvo16)));
+            gamePlayerTG5.addSalvoes(new HashSet<>(Arrays.asList(salvo17, salvo19)));
+            gamePlayerJG5.addSalvoes(new HashSet<>(Arrays.asList(salvo18, salvo20)));
 
             salvoRepository.save(salvo1);
             salvoRepository.save(salvo2);
@@ -257,20 +270,20 @@ public class SalvoApplication {
             salvoRepository.save(salvo11);
             salvoRepository.save(salvo12);
 
-            Score score1 = new Score(game1, jackBauer, new BigDecimal(1), LocalDateTime.now());
-            Score score2 = new Score(game1, cObrian, new BigDecimal(0), LocalDateTime.now());
-            Score score3 = new Score(game2, jackBauer, new BigDecimal(0.5), LocalDateTime.now());
-            Score score4 = new Score(game2, cObrian, new BigDecimal(0.5), LocalDateTime.now());
-            Score score5 = new Score(game3, cObrian, new BigDecimal(0), LocalDateTime.now());
-            Score score6 = new Score(game3, tony, new BigDecimal(1), LocalDateTime.now());
-            Score score7 = new Score(game4, cObrian, new BigDecimal(0.5), LocalDateTime.now());
-            Score score8 = new Score(game4, jackBauer, new BigDecimal(0.5), LocalDateTime.now());
-            Score score9 = new Score(game5, tony, new BigDecimal(1), LocalDateTime.now());
-            Score score10 = new Score(game5, jackBauer, new BigDecimal(0), LocalDateTime.now());
+            Score score1 = new Score(game1, jackBauer, new BigDecimal(1));
+            Score score2 = new Score(game1, cObrian, new BigDecimal(0));
+            Score score3 = new Score(game2, jackBauer, new BigDecimal(0.5));
+            Score score4 = new Score(game2, cObrian, new BigDecimal(0.5));
+            Score score5 = new Score(game3, cObrian, new BigDecimal(0));
+            Score score6 = new Score(game3, tony, new BigDecimal(1));
+            Score score7 = new Score(game4, cObrian, new BigDecimal(0.5));
+            Score score8 = new Score(game4, jackBauer, new BigDecimal(0.5));
+            Score score9 = new Score(game5, tony, new BigDecimal(1));
+            Score score10 = new Score(game5, jackBauer, new BigDecimal(0));
             Score score11 = new Score(game6, kimBauer);
             Score score12 = new Score(game7, tony);
-            Score score13 = new Score(game8, kimBauer, new BigDecimal(0.5), LocalDateTime.now());
-            Score score14 = new Score(game8, tony, new BigDecimal(0.5), LocalDateTime.now());
+            Score score13 = new Score(game8, kimBauer, new BigDecimal(0.5));
+            Score score14 = new Score(game8, tony, new BigDecimal(0.5));
 
             scoreRepository.save(score1);
             scoreRepository.save(score2);

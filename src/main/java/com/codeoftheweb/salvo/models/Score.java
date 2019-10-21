@@ -37,17 +37,17 @@ public class Score {
         this.setScoreGamePlayer();
     }
 
-    public Score(Game game, Player player, BigDecimal score, LocalDateTime finishDate) {
+    public Score(Game game, Player player, BigDecimal score) {
         this.game = game;
         this.player = player;
         this.score = score;
-        this.finishDate = finishDate;
         this.setScoreGamePlayer();
     }
 
     public void setScoreGamePlayer() {
         game.addScore(this);
         player.addScore(this);
+        this.finishDate = game.getCreated().plusMinutes(30);
     }
 
     public long getId() {
