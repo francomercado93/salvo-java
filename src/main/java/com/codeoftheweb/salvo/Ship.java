@@ -24,6 +24,12 @@ public class Ship {
     @JoinColumn(name = "gamePlayerID")
     private GamePlayer gamePlayer;
 
+    public Ship() {
+    }
+
+    public Ship(String shipType) {
+        type = shipType;
+    }
 
     public GamePlayer getGamePlayer() {
         return gamePlayer;
@@ -34,13 +40,6 @@ public class Ship {
     }
 
     private String type;
-
-    public Ship() {
-    }
-
-    public Ship(String shipType) {
-        type = shipType;
-    }
 
     public long getId() {
         return id;

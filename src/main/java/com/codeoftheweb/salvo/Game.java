@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -43,16 +42,8 @@ public class Game {
         return gamePlayers;
     }
 
-    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-        this.gamePlayers = gamePlayers;
-    }
-
     public LocalDateTime getCreated() {
         return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
     }
 
     @JsonIgnore
