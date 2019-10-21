@@ -1,11 +1,12 @@
 package com.codeoftheweb.salvo;
 
-import org.apache.tomcat.jni.Local;
+import com.codeoftheweb.salvo.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import com.codeoftheweb.salvo.repositories.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

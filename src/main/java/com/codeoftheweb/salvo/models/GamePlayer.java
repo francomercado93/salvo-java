@@ -1,9 +1,8 @@
-package com.codeoftheweb.salvo;
+package com.codeoftheweb.salvo.models;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -111,10 +110,4 @@ public class GamePlayer {
     public Score getScore() {
         return player.getScore(game);
     }
-
-    /*
-    public Boolean shipIsSunk() {
-        return ships.stream().allMatch(ship -> ship.isSunk(salvoes));
-    }
-     */
 }
