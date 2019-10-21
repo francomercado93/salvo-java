@@ -274,16 +274,16 @@ public class SalvoApplication {
             Score score2 = new Score(game1, cObrian, new BigDecimal(0));
             Score score3 = new Score(game2, jackBauer, new BigDecimal(0.5));
             Score score4 = new Score(game2, cObrian, new BigDecimal(0.5));
-            Score score5 = new Score(game3, cObrian, new BigDecimal(0));
-            Score score6 = new Score(game3, tony, new BigDecimal(1));
+            Score score5 = new Score(game3, cObrian, new BigDecimal(1));
+            Score score6 = new Score(game3, tony, new BigDecimal(0));
             Score score7 = new Score(game4, cObrian, new BigDecimal(0.5));
             Score score8 = new Score(game4, jackBauer, new BigDecimal(0.5));
-            Score score9 = new Score(game5, tony, new BigDecimal(1));
-            Score score10 = new Score(game5, jackBauer, new BigDecimal(0));
+            Score score9 = new Score(game5, tony);
+            Score score10 = new Score(game5, jackBauer);
             Score score11 = new Score(game6, kimBauer);
             Score score12 = new Score(game7, tony);
-            Score score13 = new Score(game8, kimBauer, new BigDecimal(0.5));
-            Score score14 = new Score(game8, tony, new BigDecimal(0.5));
+            Score score13 = new Score(game8, kimBauer);
+            Score score14 = new Score(game8, tony)  ;
 
             scoreRepository.save(score1);
             scoreRepository.save(score2);
