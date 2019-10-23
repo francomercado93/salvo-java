@@ -1,20 +1,42 @@
 package com.codeoftheweb.salvo;
 
 import com.codeoftheweb.salvo.models.*;
+import com.codeoftheweb.salvo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
-import com.codeoftheweb.salvo.repositories.*;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 
 @SpringBootApplication
-public class SalvoApplication {
+public class SalvoApplication extends SpringBootServletInitializer {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -42,14 +64,18 @@ public class SalvoApplication {
     public CommandLineRunner initData() {
         return (args) -> {
 
-            /*Players*/
-            Player jackBauer = new Player("j.bauer", "Jack", "Bauer", "j.bauer@ctu.gov");
-            Player cObrian = new Player("c.obrian ", "Chloe", "O'Brian", "c.obrian@ctu.gov");
-            Player kimBauer = new Player("kim_bauer", "Kim", "Bauer", "kim_bauer@ctu.gov");
-            Player tony = new Player("t.almeida", "Tony", "Almeida", "t.almeida@ctu.gov");
-
             LocalDateTime fechaGame = LocalDateTime.of(2019, 10, 07, 01, 50);
 
+            /*Players*/
+            Player jackBauer = new Player("j.bauer@ctu.gov", "Jack", "Bauer", "24");
+            Player cObrian = new Player("c.obrian@ctu.gov", "Chloe", "O'Brian", "42");
+            Player kimBauer = new Player("kim_bauer@ctu.gov", "Kim", "Bauer", "kb");
+            Player tony = new Player("t.almeida@ctu.gov", "Tony", "Almeida", "mole");
+
+            encodePassword(jackBauer);
+            encodePassword(cObrian);
+            encodePassword(kimBauer);
+            encodePassword(tony);
             /*Games*/
 
             Game game1 = new Game(fechaGame);
@@ -283,7 +309,7 @@ public class SalvoApplication {
             Score score11 = new Score(game6, kimBauer);
             Score score12 = new Score(game7, tony);
             Score score13 = new Score(game8, kimBauer);
-            Score score14 = new Score(game8, tony)  ;
+            Score score14 = new Score(game8, tony);
 
             scoreRepository.save(score1);
             scoreRepository.save(score2);
@@ -300,5 +326,90 @@ public class SalvoApplication {
             scoreRepository.save(score13);
             scoreRepository.save(score14);
         };
+    }
+
+    private void encodePassword(Player player) {
+        player.setPassword(passwordEncoder().encode(player.getPassword()));
+    }
+}
+
+
+//Revisar import
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+    @Autowired
+    PlayerRepository playerRepository;
+
+
+    //Para dar a spring un metodo para obtener la informacion del playerRepository
+    @Override
+    public void init(AuthenticationManagerBuilder auth) throws Exception {
+        //devuelve un objeto userDetailsService. Le pasamos un input y si lo encuentra devuelve el objeto
+        //userDetail con el userNam y password, spring puede usar este objeto para ver si son las contraseñas
+        // y nombre de usuario correctos
+        auth.userDetailsService(inputName -> {
+            Player player = playerRepository.findByUserName(inputName);
+            if (player != null) {
+                return new User(player.getUserName(), player.getPassword(),
+                        ///Definimos los roles que puede tener los distintos usuarios
+                        AuthorityUtils.createAuthorityList("USER"));
+            } else {
+                throw new UsernameNotFoundException("Unknown user: " + inputName);
+            }
+        });
+    }
+
+}
+
+//Autorizacion
+@Configuration
+@EnableWebSecurity
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+                .antMatchers("/h2-console/**").permitAll()//allow h2 console access to admins only
+                .antMatchers("/web/**").permitAll()
+//                Para que cualquiera pueda entrar a cualquier pagina, por
+                .antMatchers("/**").hasAuthority("USER")
+                .anyRequest().authenticated()//all other urls can be access by any authenticated role
+                .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
+                .and().headers().frameOptions().sameOrigin()//allow use of frame to same origin urls
+//                para acceder a cualquier otra pagina se necesita estar logueado
+//                and() empieza una nueva seccion de reglas
+                .and();
+
+//        Para hacer un post en la consola hay que usar esto
+//        $.post("/api/login", { name: "j.bauer@ctu.gov", pwd: "24" }).done(function() { console.log("logged in!"); })
+        http.formLogin()
+                .usernameParameter("name")
+                .passwordParameter("pwd")
+                .loginPage("/api/login");
+
+        http.logout().logoutUrl("/api/logout");
+
+//        Configurar seguridad de servicios web con respuestas http
+//         desactivar tokens CSRF
+        http.csrf().disable();
+
+//         Si un player no esta autenticado e intenta acceder a un url protegido solo envia authentication failure response
+        http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+        // Si el login es exitosos limpia los flags pidiendo por la autenticacion
+        http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+        // Si el login falla solo envia authentication failure response
+        http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+        // Si el logout es exitosos solo envia success response
+        http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+    }
+
+    private void clearAuthenticationAttributes(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        }
     }
 }

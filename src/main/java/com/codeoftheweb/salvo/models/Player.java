@@ -24,7 +24,7 @@ public class Player {
 
     private String lastName;
 
-    private String email;
+    private String password;
 
     @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     List<GamePlayer> gamePlayers = new ArrayList<>();
@@ -38,11 +38,25 @@ public class Player {
     }
     //constructor con 3 parametros
 
-    public Player(String _username, String first, String last, String email) {
+    public Player(String _username, String pass) {
+        this.userName = _username;
+        this.password = pass;
+    }
+
+    public Player(String _username, String first, String last, String pass) {
         this.userName = _username;
         this.firstName = first;
         this.lastName = last;
-        this.email = email;
+        this.password = pass;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setLastName(String lastName) {
@@ -55,14 +69,6 @@ public class Player {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstName() {
@@ -97,7 +103,7 @@ public class Player {
     public Map<String, Object> makeOwnerDTOPlayers() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
-        dto.put("email", this.getEmail());
+        dto.put("email", this.getUserName());
         return dto;
     }
 

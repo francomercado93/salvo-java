@@ -1,14 +1,16 @@
-package com.codeoftheweb.salvo;
+package com.codeoftheweb.salvo.controllers;
 
 import com.codeoftheweb.salvo.models.Game;
 import com.codeoftheweb.salvo.models.GamePlayer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.codeoftheweb.salvo.models.Player;
 import com.codeoftheweb.salvo.repositories.GamePlayerRepository;
 import com.codeoftheweb.salvo.repositories.GameRepository;
 import com.codeoftheweb.salvo.repositories.PlayerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 public class SalvoController {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private GameRepository gameRepository;
 
     @Autowired
@@ -27,6 +32,23 @@ public class SalvoController {
 
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
+
+    //Encriptar pass
+    @RequestMapping(path = "/players", method = RequestMethod.POST)
+    public ResponseEntity<Object> register(
+            @RequestParam String email, @RequestParam String password) {
+//      Si no se llenan los campos de email y password responde con un status FORDIBBEN
+        if (email.isEmpty() || password.isEmpty()) {
+            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+        }
+//      Si ya existe el usuario con ese email no deja crear otro de nuevo, responde con un status FORDIBBEN
+        if (playerRepository.findByUserName(email) != null) {
+            return new ResponseEntity<>("Username already in use", HttpStatus.FORBIDDEN);
+        }
+//      una vez que pasa todas las pruebas puede guardar en la bd
+        playerRepository.save(new Player(email, passwordEncoder.encode(password)));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     //ids de juegos
     @RequestMapping("/games-ids")
