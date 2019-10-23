@@ -60,6 +60,10 @@ public class SalvoApplication extends SpringBootServletInitializer {
         SpringApplication.run(SalvoApplication.class, args);
     }
 
+    private void encodePassword(Player player) {
+        player.setPassword(passwordEncoder().encode(player.getPassword()));
+    }
+
     @Bean
     public CommandLineRunner initData() {
         return (args) -> {
@@ -72,10 +76,10 @@ public class SalvoApplication extends SpringBootServletInitializer {
             Player kimBauer = new Player("kim_bauer@ctu.gov", "Kim", "Bauer", "kb");
             Player tony = new Player("t.almeida@ctu.gov", "Tony", "Almeida", "mole");
 
-            encodePassword(jackBauer);
-            encodePassword(cObrian);
-            encodePassword(kimBauer);
-            encodePassword(tony);
+            this.encodePassword(jackBauer);
+            this.encodePassword(cObrian);
+            this.encodePassword(kimBauer);
+            this.encodePassword(tony);
             /*Games*/
 
             Game game1 = new Game(fechaGame);
@@ -304,12 +308,12 @@ public class SalvoApplication extends SpringBootServletInitializer {
             Score score6 = new Score(game3, tony, new BigDecimal(0));
             Score score7 = new Score(game4, cObrian, new BigDecimal(0.5));
             Score score8 = new Score(game4, jackBauer, new BigDecimal(0.5));
-            Score score9 = new Score(game5, tony);
-            Score score10 = new Score(game5, jackBauer);
-            Score score11 = new Score(game6, kimBauer);
-            Score score12 = new Score(game7, tony);
-            Score score13 = new Score(game8, kimBauer);
-            Score score14 = new Score(game8, tony);
+//            Score score9 = new Score(game5, tony);
+//            Score score10 = new Score(game5, jackBauer);
+//            Score score11 = new Score(game6, kimBauer);
+//            Score score12 = new Score(game7, tony);
+//            Score score13 = new Score(game8, kimBauer);
+//            Score score14 = new Score(game8, tony);
 
             scoreRepository.save(score1);
             scoreRepository.save(score2);
@@ -319,20 +323,15 @@ public class SalvoApplication extends SpringBootServletInitializer {
             scoreRepository.save(score6);
             scoreRepository.save(score7);
             scoreRepository.save(score8);
-            scoreRepository.save(score9);
-            scoreRepository.save(score10);
-            scoreRepository.save(score11);
-            scoreRepository.save(score12);
-            scoreRepository.save(score13);
-            scoreRepository.save(score14);
+//            scoreRepository.save(score9);
+//            scoreRepository.save(score10);
+//            scoreRepository.save(score11);
+//            scoreRepository.save(score12);
+//            scoreRepository.save(score13);
+//            scoreRepository.save(score14);
         };
     }
-
-    private void encodePassword(Player player) {
-        player.setPassword(passwordEncoder().encode(player.getPassword()));
-    }
 }
-
 
 //Revisar import
 @Configuration
@@ -340,7 +339,6 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
     @Autowired
     PlayerRepository playerRepository;
-
 
     //Para dar a spring un metodo para obtener la informacion del playerRepository
     @Override
@@ -369,10 +367,15 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+//    Un * para archivos, ** para carpetas y archivos
+                //Games tienen que ser accedidos por cualquier usuario
+                .antMatchers("/api/games").permitAll()
+                .antMatchers("/api/players").permitAll()
                 .antMatchers("/h2-console/**").permitAll()//allow h2 console access to admins only
                 .antMatchers("/web/**").permitAll()
 //                Para que cualquiera pueda entrar a cualquier pagina, por
-                .antMatchers("/**").hasAuthority("USER")
+                .antMatchers("/rest/*").hasAuthority("USER")
+                .antMatchers("/api/game_view/*").hasAuthority("USER")
                 .anyRequest().authenticated()//all other urls can be access by any authenticated role
                 .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
                 .and().headers().frameOptions().sameOrigin()//allow use of frame to same origin urls
@@ -383,6 +386,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        Para hacer un post en la consola hay que usar esto
 //        $.post("/api/login", { name: "j.bauer@ctu.gov", pwd: "24" }).done(function() { console.log("logged in!"); })
         http.formLogin()
+                //Tienen que ser los mismos que aparecen en el AJAX
                 .usernameParameter("name")
                 .passwordParameter("pwd")
                 .loginPage("/api/login");
@@ -392,7 +396,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        Configurar seguridad de servicios web con respuestas http
 //         desactivar tokens CSRF
         http.csrf().disable();
-
+        http.headers().frameOptions().disable();
 //         Si un player no esta autenticado e intenta acceder a un url protegido solo envia authentication failure response
         http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
 

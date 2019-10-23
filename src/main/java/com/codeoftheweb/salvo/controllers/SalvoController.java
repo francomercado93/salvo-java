@@ -9,6 +9,8 @@ import com.codeoftheweb.salvo.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,15 +35,17 @@ public class SalvoController {
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
 
-    //Encriptar pass
+    //Encriptar pass para el sign up,
+
+    //    Para hacer un post para crear un player los parametros tienen que coincidir con los que recibe el metodo register
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(
             @RequestParam String email, @RequestParam String password) {
-//      Si no se llenan los campos de email y password responde con un status FORDIBBEN
+//      Si no se llenan los campos de email y password responde con un status FORBIDDEN
         if (email.isEmpty() || password.isEmpty()) {
             return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
         }
-//      Si ya existe el usuario con ese email no deja crear otro de nuevo, responde con un status FORDIBBEN
+//      Si ya existe el usuario con ese email no deja crear otro de nuevo, responde con un status FORBIDDEN
         if (playerRepository.findByUserName(email) != null) {
             return new ResponseEntity<>("Username already in use", HttpStatus.FORBIDDEN);
         }
@@ -61,9 +65,15 @@ public class SalvoController {
 
     //Obtenemos un json con todos los juegos con un formato que elegimos
     @RequestMapping("/games")
-    public Map getAllGamesDTO() {
+    //Map para task5
+    public Map<String, Object> getAllGamesDTO(Authentication authentication) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("player", "Guest");
+        if (this.isGuest(authentication)) {
+            dto.put("player", "Guest");
+        } else {
+            Player player = playerRepository.findByUserName(authentication.getName());
+            dto.put("player", player.makeOwnerDTOPlayers());
+        }
         dto.put("games", this.getAllGames());
         return dto;
     }
@@ -81,6 +91,10 @@ public class SalvoController {
                 .stream()
                 .map(owner -> owner.makeOwnerDTOPlayers())
                 .collect(Collectors.toList());
+    }
+
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
     }
 
     //Le paso el id de gamePlayer y en el json el primer id es el del game
@@ -110,3 +124,10 @@ public class SalvoController {
                 .collect(Collectors.toList()));
     }
 }
+
+//{ "player":
+//        { "id": nn,
+//        "name": username
+//        },
+//        "games": [ ... ]
+//}

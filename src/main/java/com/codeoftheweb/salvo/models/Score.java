@@ -42,12 +42,12 @@ public class Score {
         this.player = player;
         this.score = score;
         this.setScoreGamePlayer();
+        this.finishDate = game.getCreated().plusMinutes(30);
     }
 
     public void setScoreGamePlayer() {
         game.addScore(this);
         player.addScore(this);
-        this.finishDate = game.getCreated().plusMinutes(30);
     }
 
     public long getId() {

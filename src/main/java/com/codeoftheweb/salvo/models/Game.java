@@ -82,8 +82,11 @@ public class Game {
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())
                 .collect(toList()));
+//        revisar
         dto.put("scores", gamePlayers
                 .stream()
+//                REVISAR CUANDO UN SCORE ES NULL
+                .filter(gp -> gp.getScore() != null)
                 .map(gp -> gp.getScore().makeDTOScore())
                 .collect(toList()));
         return dto;

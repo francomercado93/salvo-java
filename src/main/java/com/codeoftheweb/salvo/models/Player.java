@@ -107,6 +107,14 @@ public class Player {
         return dto;
     }
 
+    public Map<String, Object> makeDTOPlayer2() {
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", this.getId());
+//      Cambio email por name
+        dto.put("name", this.getUserName());
+        return dto;
+    }
+
     public List<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }
