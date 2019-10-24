@@ -39,24 +39,26 @@ public class SalvoController {
 
     //    Para hacer un post para crear un player los parametros tienen que coincidir con los que recibe el metodo register
     @RequestMapping(path = "/players", method = RequestMethod.POST)
-    public ResponseEntity<Object> register(
+//    Devuelve un ResponseEntity<Map<String, Object>> y no ResponseEntity<Object>
+//    ResponseEntity<Object> no es subtipo de ResponseEntity<Map<String, Object>>
+    public ResponseEntity<Map<String, Object>> register(
             @RequestParam String email, @RequestParam String password) {
 //      Si no se llenan los campos de email y password responde con un status FORBIDDEN
         if (email.isEmpty() || password.isEmpty()) {
-            return new ResponseEntity<>(makeMap("Missing data"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(makeMap("error", "Missing data"), HttpStatus.FORBIDDEN);
         }
 //      Si ya existe el usuario con ese email no deja crear otro de nuevo, responde con un status FORBIDDEN
         if (playerRepository.findByUserName(email) != null) {
-            return new ResponseEntity<>(makeMap("Username already in use"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(makeMap("error", "Username already in use"), HttpStatus.FORBIDDEN);
         }
 //      una vez que pasa todas las pruebas puede guardar en la bd
         playerRepository.save(new Player(email, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    private Object makeMap(String error) {
+    private Map<String, Object> makeMap(String key, Object value) {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("error", error);
+        dto.put(key, value);
         return dto;
     }
 
@@ -105,14 +107,23 @@ public class SalvoController {
 
     //Le paso el id de gamePlayer y en el json el primer id es el del game
     @RequestMapping("/game_view/{nn}")
-    public Map<String, Object> getGamePlayerInformation(@PathVariable Long nn) {
+    public ResponseEntity<Map<String, Object>> getGamePlayerInformation(@PathVariable Long nn, Authentication authentication) {
+        Player player = playerRepository.findByUserName(authentication.getName());
         GamePlayer gamePlayer = gamePlayerRepository.findById(nn).get();
-        Game game = gamePlayer.getGame();
-        //Reutilizo el DTO del game y le agrego los barcos del player y  los salvos
-        Map<String, Object> dto = game.makeOwnerDTOGames();
-        putShips(gamePlayer, dto);
-        putSalvoes(game, dto);
-        return dto;
+        if (this.isPlayerValid(player, gamePlayer)) {
+            return new ResponseEntity<>(makeMap("error", "No posee autorizacion"), HttpStatus.UNAUTHORIZED);
+        } else {
+            Game game = gamePlayer.getGame();
+            //Reutilizo el DTO del game y le agrego los barcos del player y  los salvos
+            Map<String, Object> dto = game.makeOwnerDTOGames();
+            putShips(gamePlayer, dto);
+            putSalvoes(game, dto);
+            return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
+        }
+    }
+
+    private boolean isPlayerValid(Player player, GamePlayer gamePlayer) {
+        return player.getId() != gamePlayer.getPlayer().getId();
     }
 
     private void putSalvoes(Game game, Map<String, Object> dto) {

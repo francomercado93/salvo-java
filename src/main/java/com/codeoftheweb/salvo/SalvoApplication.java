@@ -410,7 +410,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Si el login falla solo envia authentication failure response
         http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
 
-        // Si el logout es exitosos solo envia success response
+        // Si el logout es exitoso solo envia success response
         http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
     }
 
