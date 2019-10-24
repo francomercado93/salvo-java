@@ -2,6 +2,7 @@ package com.codeoftheweb.salvo.controllers;
 
 import com.codeoftheweb.salvo.models.Game;
 import com.codeoftheweb.salvo.models.GamePlayer;
+import com.codeoftheweb.salvo.models.Hits;
 import com.codeoftheweb.salvo.models.Player;
 import com.codeoftheweb.salvo.repositories.GamePlayerRepository;
 import com.codeoftheweb.salvo.repositories.GameRepository;
@@ -14,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +57,20 @@ public class SalvoController {
 //      una vez que pasa todas las pruebas puede guardar en la bd
         playerRepository.save(new Player(email, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(path = "/games", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> createGame(Authentication authentication) {
+        if (this.isGuest(authentication)) {
+            return new ResponseEntity<>(makeMap("error", "Unauthorized "), HttpStatus.UNAUTHORIZED);
+        } else {
+            Player player = playerRepository.findByUserName(authentication.getName());
+            Game newGame = new Game(LocalDateTime.now());
+            gameRepository.save(newGame);
+            GamePlayer newGamePlayer = new GamePlayer(player, newGame);
+            gamePlayerRepository.save(newGamePlayer);
+            return new ResponseEntity<>(makeMap("gpid", newGamePlayer.getId()), HttpStatus.CREATED);
+        }
     }
 
     private Map<String, Object> makeMap(String key, Object value) {
@@ -118,6 +135,8 @@ public class SalvoController {
             Map<String, Object> dto = game.makeOwnerDTOGames();
             putShips(gamePlayer, dto);
             putSalvoes(game, dto);
+            Hits hits = new Hits();
+            dto.put("hits", hits.makeDTO());
             return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
         }
     }

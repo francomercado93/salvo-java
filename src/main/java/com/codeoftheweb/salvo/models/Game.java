@@ -78,6 +78,7 @@ public class Game {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
         dto.put("created", this.convertDateToMilliseconds());
+        dto.put("gameState", "PLACESHIPS");
         dto.put("gamePlayers", gamePlayers
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())

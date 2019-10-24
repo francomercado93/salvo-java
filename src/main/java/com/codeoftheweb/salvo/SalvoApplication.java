@@ -333,8 +333,9 @@ public class SalvoApplication extends SpringBootServletInitializer {
     }
 }
 
-//Revisar import
+//Revisar import EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
     @Autowired
