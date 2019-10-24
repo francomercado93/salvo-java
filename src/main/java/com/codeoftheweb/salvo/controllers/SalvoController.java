@@ -42,7 +42,7 @@ public class SalvoController {
     public ResponseEntity<Object> register(
             @RequestParam String email, @RequestParam String password) {
 //      Si no se llenan los campos de email y password responde con un status FORBIDDEN
-        if (email.isEmpty() || password.isEmpty()) {
+        if (this.emailIsValid(email) || password.isEmpty()) {
             return new ResponseEntity<>(makeMap("Missing data"), HttpStatus.FORBIDDEN);
         }
 //      Si ya existe el usuario con ese email no deja crear otro de nuevo, responde con un status FORBIDDEN
@@ -52,6 +52,10 @@ public class SalvoController {
 //      una vez que pasa todas las pruebas puede guardar en la bd
         playerRepository.save(new Player(email, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    private boolean emailIsValid(@RequestParam String email) {
+        return email.isEmpty() || email.contains(" ");
     }
 
     private Object makeMap(String error) {
