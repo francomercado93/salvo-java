@@ -373,13 +373,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/players").permitAll()
                 .antMatchers("/h2-console/**").permitAll()//allow h2 console access to admins only
                 .antMatchers("/web/**").permitAll()
-//                Para que cualquiera pueda entrar a cualquier pagina, por
+//                para acceder a cualquier servicio rest o al game_view se necesita estar logueado
                 .antMatchers("/rest/*").hasAuthority("USER")
                 .antMatchers("/api/game_view/*").hasAuthority("USER")
                 .anyRequest().authenticated()//all other urls can be access by any authenticated role
                 .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
                 .and().headers().frameOptions().sameOrigin()//allow use of frame to same origin urls
-//                para acceder a cualquier otra pagina se necesita estar logueado
 //                and() empieza una nueva seccion de reglas
                 .and();
 

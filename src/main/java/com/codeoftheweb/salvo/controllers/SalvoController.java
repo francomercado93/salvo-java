@@ -43,15 +43,21 @@ public class SalvoController {
             @RequestParam String email, @RequestParam String password) {
 //      Si no se llenan los campos de email y password responde con un status FORBIDDEN
         if (email.isEmpty() || password.isEmpty()) {
-            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(makeMap("Missing data"), HttpStatus.FORBIDDEN);
         }
 //      Si ya existe el usuario con ese email no deja crear otro de nuevo, responde con un status FORBIDDEN
         if (playerRepository.findByUserName(email) != null) {
-            return new ResponseEntity<>("Username already in use", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(makeMap("Username already in use"), HttpStatus.FORBIDDEN);
         }
 //      una vez que pasa todas las pruebas puede guardar en la bd
         playerRepository.save(new Player(email, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    private Object makeMap(String error) {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("error", error);
+        return dto;
     }
 
     //ids de juegos
@@ -124,10 +130,3 @@ public class SalvoController {
                 .collect(Collectors.toList()));
     }
 }
-
-//{ "player":
-//        { "id": nn,
-//        "name": username
-//        },
-//        "games": [ ... ]
-//}
