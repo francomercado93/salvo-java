@@ -349,15 +349,18 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
         auth.userDetailsService(inputName -> {
             Player player = playerRepository.findByUserName(inputName);
             if (player != null) {
+//                La clase User necesita usar la codificacion de contraseña para comparar las contraseñas de
+//                inicio de sesion  con las que estan almacenadas (Para esto se usa el passwordEncoder )
                 return new User(player.getUserName(), player.getPassword(),
                         ///Definimos los roles que puede tener los distintos usuarios
                         AuthorityUtils.createAuthorityList("USER"));
+//           Preguntar por el mensaje de error que muestra el front cuando se ingresa un usuaario que no existe en la bd
+//           o cuando se ingresa una contraseña incorrecta
             } else {
-                throw new UsernameNotFoundException("Unknown user: " + inputName);
+                throw new UsernameNotFoundException("error: " + inputName);
             }
         });
     }
-
 }
 
 //Autorizacion
@@ -375,6 +378,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/web/**").permitAll()
 //                para acceder a cualquier servicio rest o al game_view se necesita estar logueado
                 .antMatchers("/rest/*").hasAuthority("USER")
+                /*Revisar permisos que tiene un usuario para que otro usuario no pueda ver sus datos*/
                 .antMatchers("/api/game_view/*").hasAuthority("USER")
                 .anyRequest().authenticated()//all other urls can be access by any authenticated role
                 .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
@@ -384,6 +388,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 //        Para hacer un post en la consola hay que usar esto
 //        $.post("/api/login", { name: "j.bauer@ctu.gov", pwd: "24" }).done(function() { console.log("logged in!"); })
+//        Crea un controlador de inicio de sesion
         http.formLogin()
                 //Tienen que ser los mismos que aparecen en el AJAX
                 .usernameParameter("name")
