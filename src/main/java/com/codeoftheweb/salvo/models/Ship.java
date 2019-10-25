@@ -62,7 +62,7 @@ public class Ship {
         cells.addAll(locations);
     }
 
-    public Object makeDTOShip() {
+    public Map<String, Object> makeDTOShip() {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("type", this.type);
         dto.put("locations", this.cells);

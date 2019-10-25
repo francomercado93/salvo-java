@@ -27,7 +27,7 @@ public class Hits {
         this.opponent = opponent;
     }
 
-    public Object makeDTO() {
+    public Map<String, Object> makeDTO() {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("self", this.getSelf());
         dto.put("opponent", this.getOpponent());

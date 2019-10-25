@@ -90,7 +90,7 @@ public class Score {
         this.finishDate = finishDate;
     }
 
-    public Object makeDTOScore() {
+    public Map<String, Object> makeDTOScore() {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("player", player.getId());
         dto.put("score", score);
