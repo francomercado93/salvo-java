@@ -19,7 +19,7 @@ public class Ship {
     @ElementCollection  //Crea una nueva tabla que tiene las celdas y el id del barco
     @Column(name = "cell")    //Cambia el nombre de la columna de cells a cell
     /*Cambiar por set ?*/
-    private List<String> cells = new ArrayList<>();
+    private List<String> locations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gamePlayerID")
@@ -59,24 +59,25 @@ public class Ship {
     }
 
     public void addLocations(List<String> locations) {
-        cells.addAll(locations);
+        this.locations.addAll(locations);
     }
 
     public Map<String, Object> makeDTOShip() {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("type", this.type);
-        dto.put("locations", this.cells);
+        dto.put("locations", this.locations);
         return dto;
     }
 
     public long length() {
-        return cells.stream().count();
+        return locations.stream().count();
     }
 
-    /*
-    public Boolean isSunk(Set<Salvo> salvoes) {
-        return this.cells.stream().allMatch(cell -> salvoes.cells)
+    public List<String> getLocations() {
+        return locations;
     }
 
-     */
+    public void setLocations(List<String> locations) {
+        this.locations = locations;
+    }
 }

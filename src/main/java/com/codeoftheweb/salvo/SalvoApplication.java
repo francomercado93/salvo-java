@@ -380,6 +380,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/web/**").permitAll()
 //                para acceder a cualquier servicio rest o al game_view se necesita estar logueado
                 .antMatchers("/api/game/**").hasAuthority("USER")
+                .antMatchers("/api/games/**").hasAuthority("USER")
                 .antMatchers("/rest/*").hasAuthority("USER")
                 /*Revisar permisos que tiene un usuario para que otro usuario no pueda ver sus datos*/
                 .antMatchers("/api/game_view/*").hasAuthority("USER")
