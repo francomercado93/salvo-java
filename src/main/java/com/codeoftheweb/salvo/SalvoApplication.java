@@ -376,10 +376,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/**").permitAll()
                 .antMatchers("/api/games").permitAll()
                 .antMatchers("/api/players").permitAll()
-                .antMatchers("/api/game/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()//allow h2 console access to admins only
                 .antMatchers("/web/**").permitAll()
 //                para acceder a cualquier servicio rest o al game_view se necesita estar logueado
+                .antMatchers("/api/game/**").hasAuthority("USER")
                 .antMatchers("/rest/*").hasAuthority("USER")
                 /*Revisar permisos que tiene un usuario para que otro usuario no pueda ver sus datos*/
                 .antMatchers("/api/game_view/*").hasAuthority("USER")
