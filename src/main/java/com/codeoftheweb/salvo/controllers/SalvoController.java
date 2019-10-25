@@ -90,6 +90,15 @@ public class SalvoController {
         return new ResponseEntity<>(this.makeMap("gpid", newGamePlayer.getId()), HttpStatus.CREATED);
     }
 
+    @RequestMapping(path = "/game/{nn}/players")
+    public ResponseEntity<Map<String, Object>> getPlayersGame(@PathVariable Long nn) {
+        Game game = gameRepository.findById(nn).orElse(null);
+        if (game == null) {
+            return new ResponseEntity<>(this.makeMap("error", "No such game"), HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(game.makeOwnerDTOGames(), HttpStatus.ACCEPTED);
+    }
+
     private Map<String, Object> makeMap(String key, Object value) {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put(key, value);
