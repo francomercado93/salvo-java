@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +70,24 @@ public class SalvoController {
             gamePlayerRepository.save(newGamePlayer);
             return new ResponseEntity<>(makeMap("gpid", newGamePlayer.getId()), HttpStatus.CREATED);
         }
+    }
+
+    @RequestMapping(path = "/game/{nn}/players", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> joinGame(Authentication authentication, @PathVariable Long nn) {
+        if (this.isGuest(authentication)) {
+            return new ResponseEntity<>(this.makeMap("error", "Unauthorized"), HttpStatus.UNAUTHORIZED);
+        }
+        Player player = playerRepository.findByUserName(authentication.getName());
+        Game game = gameRepository.findById(nn).orElse(null);
+        if (game == null) {
+            return new ResponseEntity<>(this.makeMap("error", "No such game"), HttpStatus.FORBIDDEN);
+        }
+        if (game.getGamePlayers().size() > 1) {
+            return new ResponseEntity<>(this.makeMap("error", "Game is full"), HttpStatus.FORBIDDEN);
+        }
+        GamePlayer newGamePlayer = new GamePlayer(player, game);
+        gamePlayerRepository.save(newGamePlayer);
+        return new ResponseEntity<>(this.makeMap("gpid", newGamePlayer.getId()), HttpStatus.CREATED);
     }
 
     private Map<String, Object> makeMap(String key, Object value) {

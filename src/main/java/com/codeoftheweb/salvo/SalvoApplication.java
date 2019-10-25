@@ -373,8 +373,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 //    Un * para archivos, ** para carpetas y archivos
                 //Games tienen que ser accedidos por cualquier usuario
+//                .antMatchers("/api/**").permitAll()
                 .antMatchers("/api/games").permitAll()
                 .antMatchers("/api/players").permitAll()
+                .antMatchers("/api/game/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()//allow h2 console access to admins only
                 .antMatchers("/web/**").permitAll()
 //                para acceder a cualquier servicio rest o al game_view se necesita estar logueado
