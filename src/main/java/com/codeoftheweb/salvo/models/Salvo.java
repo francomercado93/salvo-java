@@ -24,20 +24,20 @@ public class Salvo {
 
     @ElementCollection
     @Column(name = "cell")
-    private Set<String> cells = new HashSet<>();
+    private Set<String> salvoLocations = new HashSet<>();
 
     public Salvo() {
     }
 
     public Salvo(Integer turnGame, Set<String> locations) {
         turn = turnGame;
-        cells = locations;
+        salvoLocations = locations;
     }
 
     public Salvo(GamePlayer gameP, Integer turnGame, Set<String> locations) {
         gamePlayer = gameP;
         turn = turnGame;
-        cells = locations;
+        salvoLocations = locations;
     }
 
     public long getId() {
@@ -64,19 +64,23 @@ public class Salvo {
         this.turn = turn;
     }
 
-    public Set<String> getCells() {
-        return cells;
+    public Set<String> getSalvoLocations() {
+        return salvoLocations;
     }
 
-    public void setCells(Set<String> cells) {
-        this.cells = cells;
+    public void setSalvoLocations(Set<String> salvoLocations) {
+        this.salvoLocations = salvoLocations;
     }
 
     public Map<String, Object> makeDTOSalvo() {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", this.getTurn());
         dto.put("player", this.getGamePlayer().getPlayer().getId());
-        dto.put("locations", this.getCells());
+        dto.put("locations", this.getSalvoLocations());
         return dto;
+    }
+
+    public Integer getNumberLocations() {
+        return this.getSalvoLocations().size();
     }
 }

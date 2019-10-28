@@ -382,8 +382,8 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/game/**").hasAuthority("USER")
                 .antMatchers("/api/games/**").hasAuthority("USER")
                 .antMatchers("/rest/*").hasAuthority("USER")
-                /*Revisar permisos que tiene un usuario para que otro usuario no pueda ver sus datos*/
                 .antMatchers("/api/game_view/*").hasAuthority("USER")
+                /*Revisar permisos que tiene un usuario para que otro usuario no pueda ver sus datos*/
                 .anyRequest().authenticated()//all other urls can be access by any authenticated role
                 .and().csrf().ignoringAntMatchers("/h2-console/**")//don't apply CSRF protection to /h2-console
                 .and().headers().frameOptions().sameOrigin()//allow use of frame to same origin urls

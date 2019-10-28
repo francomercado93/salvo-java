@@ -107,6 +107,11 @@ public class GamePlayer {
         salvoes.addAll(newSalvoes);
     }
 
+    public void addSalvo(Salvo newSalvo) {
+        newSalvo.setGamePlayer(this);
+        salvoes.add(newSalvo);
+    }
+
     public Score getScore() {
         return player.getScore(game);
     }
