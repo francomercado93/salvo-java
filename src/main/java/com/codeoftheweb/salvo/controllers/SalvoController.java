@@ -83,6 +83,7 @@ public class SalvoController {
         Hits hits = new Hits();
         dto.put("hits", hits.makeDTO());
         return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
+//        Cambiar nombres de ships en salvoApplication
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
