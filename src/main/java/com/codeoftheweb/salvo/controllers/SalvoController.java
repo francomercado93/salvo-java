@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -80,10 +81,16 @@ public class SalvoController {
         Map<String, Object> dto = game.makeOwnerDTOGames();
         putShips(gamePlayer, dto);
         putSalvoes(game, dto);
-        Hits hits = new Hits();
-        dto.put("hits", hits.makeDTO());
+        putHits(dto);
         return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
 //        Cambiar nombres de ships en salvoApplication
+    }
+
+    private void putHits(Map<String, Object> dto) {
+        Map<String, Object> hits = new LinkedHashMap<>();
+        hits.put("self", new ArrayList<>());
+        hits.put("opponent", new ArrayList<>());
+        dto.put("hits", hits);
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
