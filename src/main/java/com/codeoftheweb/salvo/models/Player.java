@@ -103,7 +103,6 @@ public class Player {
     public Map<String, Object> makeOwnerDTOPlayers() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
-//        Modificar el json para que muestre el gpi
         dto.put("email", this.getUserName());
         return dto;
     }
@@ -111,7 +110,6 @@ public class Player {
     public Map<String, Object> makeDTOPlayer2() {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
-//      Cambio email por name
         dto.put("name", this.getUserName());
         return dto;
     }
