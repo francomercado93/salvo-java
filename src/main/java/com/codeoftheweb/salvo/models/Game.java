@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -99,5 +100,28 @@ public class Game {
 
     public void addScore(Score score1) {
         scores.add(score1);
+    }
+
+//    public Set<String> getHitsLocations() {
+//        Set<String> hitsLocations = new HashSet<>();
+//        GamePlayer gamePlayer = this.getGamePlayerLogged();
+//        GamePlayer gamePlayerOpponent = this.getGamePlayerOpponent();
+////        hitsLocations = this.getAllShipsLocations()
+////                .stream().filter(shipLocation -> gamePlayerOpponet.getAllSalvoLocations()
+////                        .stream().anyMatch(salvoLocation -> salvoLocation.equals(shipLocation))).collect(Collectors.toSet());
+//        return hitsLocations;
+//    }
+
+//    private GamePlayer getGamePlayerLogged() {
+//        return this.getGamePlayers().stream().;
+//    }
+
+//    private Set<String> getAllShipsLocations() {
+//        return this.game
+//    }
+
+    public GamePlayer getGamePlayerOpponet(GamePlayer gamePlayer) {
+//        FALTA VALIDACION CUANDO SOLO HAY UN GAMEPAYER EN UN GAME
+        return this.gamePlayers.stream().filter(gp -> gp.getId() != gamePlayer.getId()).collect(Collectors.toList()).get(0);
     }
 }

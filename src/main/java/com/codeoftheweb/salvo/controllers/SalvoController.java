@@ -10,10 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequestMapping("/api")
@@ -77,27 +74,60 @@ public class SalvoController {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
         Game game = gamePlayer.getGame();
-        //Reutilizo el DTO del game y le agrego los barcos del player y  los salvos
         Map<String, Object> dto = game.makeOwnerDTOGames();
         putShips(gamePlayer, dto);
         putSalvoes(game, dto);
-        putHits(dto);
+        putHits(gamePlayer, dto);
         return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
-//        Cambiar nombres de ships en salvoApplication
     }
 
-    private void putHits(Map<String, Object> dto) {
-        Map<String, Object> hits = new LinkedHashMap<>();
-        hits.put("self", new ArrayList<>());
-        hits.put("opponent", new ArrayList<>());
-        dto.put("hits", hits);
+    private void putHits(GamePlayer gamePlayerLogged, Map<String, Object> dto) {
+        Game game = gamePlayerLogged.getGame();
+        GamePlayer gamePlayerOpponent = game.getGamePlayerOpponet(gamePlayerLogged);
+//        dto.put("hits", this.putSelf(gamePlayerLogged));
+        dto.put("hits", gamePlayerOpponent.getSalvoes().stream().map(salvo -> salvo.makeDTOHits(gamePlayerLogged)));
+
+    }
+
+    private Map<String, Object> putSelf(GamePlayer gamePlayerLogged) {
+        Map<String, Object> self = new LinkedHashMap<>();
+        self.put("self", this.makeMapSelf(gamePlayerLogged));
+        return self;
+    }
+
+    private List<Map<String, Object>> makeMapSelf(GamePlayer gamePlayerLogged) {
+        Map<String, Object> selfDto = new LinkedHashMap<>();
+        Game game = gamePlayerLogged.getGame();
+        GamePlayer gamePlayerOpponent = gamePlayerLogged.getGamePlayerOpponet();
+        selfDto.put("turn", gamePlayerLogged.getSalvoes().stream().collect(Collectors.toList()).get(0).getId());
+//        selfDto.put("hitLocations", gamePlayerLogged.getHitsLocations());
+        selfDto.put("damages", this.damagesDTO());
+        List<Map<String, Object>> selfList = new ArrayList<>();
+        selfList.add(selfDto);
+        selfDto.put("missed", 0);
+        return selfList;
+    }
+
+    private Map<String, Object> damagesDTO() {
+        Map<String, Object> damageDTO = new LinkedHashMap<>();
+        damageDTO.put("carrierHits", 0);
+        damageDTO.put("battleShipHits", 3);
+        damageDTO.put("submarineHits", 0);
+        damageDTO.put("destroyerHits", 0);
+        damageDTO.put("patrolboatHits", 2);
+        damageDTO.put("carrier", 0);
+        damageDTO.put("battleship", 3);
+        damageDTO.put("submarine", 0);
+        damageDTO.put("destroyer", 0);
+        damageDTO.put("patrolboat", 0);
+        return damageDTO;
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> placeShips(@PathVariable Long gamePlayerId,
                                                           @RequestBody Set<Ship> ships, Authentication authentication) {
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
-//        Revisar ultima condicion
+
         if (gamePlayer == null) {
             return getResponseEntity("error", "No existe game player con el id " + gamePlayerId, HttpStatus.FORBIDDEN);
         }

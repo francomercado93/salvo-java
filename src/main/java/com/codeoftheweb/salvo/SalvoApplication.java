@@ -122,33 +122,33 @@ public class SalvoApplication extends SpringBootServletInitializer {
 
             /* SHIPS */
 
-            Ship carrierJGP1 = new Ship("Carrier");
-            Ship submarineJGP1 = new Ship("Submarine");
-            Ship patrolBoatJGP1 = new Ship("Patrol Boat");
-            Ship destroyerCGP1 = new Ship("Destroyer");
-            Ship patrolBoatCGP1 = new Ship("Patrol Boat");
-            Ship destroyerJGP2 = new Ship("Destroyer");
-            Ship patrolBoatJGP2 = new Ship("Patrol Boat");
-            Ship submarineCGP2 = new Ship("Submarine");
-            Ship patrolBoatCGP2 = new Ship("Patrol Boat");
-            Ship destroyerCGP3 = new Ship("Destroyer");
-            Ship patrolBoatCGP3 = new Ship("Patrol Boat");
-            Ship submarineTGP3 = new Ship("Submarine");
-            Ship patrolBoatTGP3 = new Ship("Patrol Boat");
-            Ship destroyerCGP4 = new Ship("Destroyer");
-            Ship patrolBeatCGP4 = new Ship("Patrol Boat");
-            Ship submarineJGP4 = new Ship("Submarine");
-            Ship patrolBoatJGP4 = new Ship("Patrol Boat");
-            Ship destroyerTGP5 = new Ship("Submarine");
-            Ship patrolBoatTGP5 = new Ship("Patrol Boat");
-            Ship submarineJGP5 = new Ship("Submarine");
-            Ship patrolBoatJGP5 = new Ship("Patrol Boat");
-            Ship destroyerKGP6 = new Ship("Destroyer");
-            Ship patrolBoatKGP6 = new Ship("Patrol Boat");
-            Ship destroyerTGP8 = new Ship("Destroyer");
-            Ship submarineTGP8 = new Ship("Submarine");
-            Ship patrolBoatTGP8 = new Ship("Patrol Boat");
-            Ship patrolBoatKGP8 = new Ship("Patrol Boat");
+            Ship carrierJGP1 = new Ship("carrier");
+            Ship submarineJGP1 = new Ship("submarine");
+            Ship patrolBoatJGP1 = new Ship("patrolboat");
+            Ship destroyerCGP1 = new Ship("destroyer");
+            Ship patrolBoatCGP1 = new Ship("patrolboat");
+            Ship destroyerJGP2 = new Ship("destroyer");
+            Ship patrolBoatJGP2 = new Ship("patrolboat");
+            Ship submarineCGP2 = new Ship("submarine");
+            Ship patrolBoatCGP2 = new Ship("patrolboat");
+            Ship destroyerCGP3 = new Ship("destroyer");
+            Ship patrolBoatCGP3 = new Ship("patrolboat");
+            Ship submarineTGP3 = new Ship("submarine");
+            Ship patrolBoatTGP3 = new Ship("patrolboat");
+            Ship destroyerCGP4 = new Ship("destroyer");
+            Ship patrolBeatCGP4 = new Ship("patrolboat");
+            Ship submarineJGP4 = new Ship("submarine");
+            Ship patrolBoatJGP4 = new Ship("patrolboat");
+            Ship destroyerTGP5 = new Ship("submarine");
+            Ship patrolBoatTGP5 = new Ship("patrolboat");
+            Ship submarineJGP5 = new Ship("submarine");
+            Ship patrolBoatJGP5 = new Ship("patrolboat");
+            Ship destroyerKGP6 = new Ship("destroyer");
+            Ship patrolBoatKGP6 = new Ship("patrolboat");
+            Ship destroyerTGP8 = new Ship("destroyer");
+            Ship submarineTGP8 = new Ship("submarine");
+            Ship patrolBoatTGP8 = new Ship("patrolboat");
+            Ship patrolBoatKGP8 = new Ship("patrolboat");
 
             /*LOCACIONES*/
 
