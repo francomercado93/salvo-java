@@ -34,6 +34,10 @@ public class GamePlayer {
     public GamePlayer() {
     }
 
+    public GamePlayer(Game game) {
+        this.game = game;
+    }
+
     public GamePlayer(Player player, Game game) {
         this.player = player;
         this.game = game;
