@@ -114,24 +114,8 @@ public class GamePlayer {
         return player.getScore(game);
     }
 
-    public Set<String> getAllSalvoLocations() {
-        return this.getSalvoes().stream().flatMap(salvo -> salvo.getSalvoLocations().stream()).collect(Collectors.toSet());
-    }
-
-    public Set<String> getAllShipsLocations() {
-        return this.getShips().stream().flatMap(ship -> ship.getLocations().stream()).collect(Collectors.toSet());
-    }
-
     public Set<String> getHitsLocations(Salvo salvo) {
-        return this.getAllShipsLocations()
-                .stream().filter(shipLocation -> salvo.getSalvoLocations()
-                        .stream().anyMatch(salvoLocation -> salvoLocation.equals(shipLocation))).collect(Collectors.toSet());
+        return getShips().stream().flatMap(ship -> ship.getHitsLocationsShip(salvo).stream()).collect(Collectors.toSet());
     }
 
-    //TODO : hacer un getHitsLocation por cada  barco
-    public GamePlayer getGamePlayerOpponet() {
-//        FALTA VALIDACION CUANDO SOLO HAY UN GAMEPLAYER EN UN GAME
-        Game game = this.getGame();
-        return game.getGamePlayers().stream().filter(gp -> gp.getId() != this.getId()).collect(Collectors.toList()).get(0);
-    }
 }

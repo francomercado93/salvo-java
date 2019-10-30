@@ -84,43 +84,14 @@ public class SalvoController {
     private void putHits(GamePlayer gamePlayerLogged, Map<String, Object> dto) {
         Game game = gamePlayerLogged.getGame();
         GamePlayer gamePlayerOpponent = game.getGamePlayerOpponet(gamePlayerLogged);
-//        dto.put("hits", this.putSelf(gamePlayerLogged));
-        dto.put("hits", gamePlayerOpponent.getSalvoes().stream().map(salvo -> salvo.makeDTOHits(gamePlayerLogged)));
-
+        Map<String, Object> hits = new LinkedHashMap<>();
+        hits.put("self", getHits(gamePlayerLogged, gamePlayerOpponent));
+        hits.put("opponent", getHits(gamePlayerOpponent, gamePlayerLogged));
+        dto.put("hits", hits);
     }
 
-    private Map<String, Object> putSelf(GamePlayer gamePlayerLogged) {
-        Map<String, Object> self = new LinkedHashMap<>();
-        self.put("self", this.makeMapSelf(gamePlayerLogged));
-        return self;
-    }
-
-    private List<Map<String, Object>> makeMapSelf(GamePlayer gamePlayerLogged) {
-        Map<String, Object> selfDto = new LinkedHashMap<>();
-        Game game = gamePlayerLogged.getGame();
-        GamePlayer gamePlayerOpponent = gamePlayerLogged.getGamePlayerOpponet();
-        selfDto.put("turn", gamePlayerLogged.getSalvoes().stream().collect(Collectors.toList()).get(0).getId());
-//        selfDto.put("hitLocations", gamePlayerLogged.getHitsLocations());
-        selfDto.put("damages", this.damagesDTO());
-        List<Map<String, Object>> selfList = new ArrayList<>();
-        selfList.add(selfDto);
-        selfDto.put("missed", 0);
-        return selfList;
-    }
-
-    private Map<String, Object> damagesDTO() {
-        Map<String, Object> damageDTO = new LinkedHashMap<>();
-        damageDTO.put("carrierHits", 0);
-        damageDTO.put("battleShipHits", 3);
-        damageDTO.put("submarineHits", 0);
-        damageDTO.put("destroyerHits", 0);
-        damageDTO.put("patrolboatHits", 2);
-        damageDTO.put("carrier", 0);
-        damageDTO.put("battleship", 3);
-        damageDTO.put("submarine", 0);
-        damageDTO.put("destroyer", 0);
-        damageDTO.put("patrolboat", 0);
-        return damageDTO;
+    private List<Map<String, Object>> getHits(GamePlayer gamePlayer1, GamePlayer gamePlayer2) {
+        return gamePlayer2.getSalvoes().stream().map(salvo -> salvo.makeDTOHits(gamePlayer1)).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)

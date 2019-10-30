@@ -3,10 +3,8 @@ package com.codeoftheweb.salvo.models;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Ship {
@@ -89,9 +87,12 @@ public class Ship {
 //                        .stream().anyMatch(salvoLocation -> salvo.equals(salvoLocation))).count();
 //        totalDamage += damageTurn;
 //        return damageTurn;
-        return this.getLocations()
-                .stream().filter(location -> salvo.getSalvoLocations()
-                        .stream().anyMatch(salvoLocation -> salvo.equals(salvoLocation))).count();
+//        return this.getLocations()
+//                .stream().filter(location -> salvo.getSalvoLocations()
+//                        .stream().anyMatch(salvoLocation -> salvo.equals(salvoLocation))).count();
+        Long damageTurn = getHitsLocationsShip(salvo).stream().count();
+        totalDamage += damageTurn;
+        return damageTurn;
     }
 
     public Long getTotalDamage() {
@@ -100,5 +101,14 @@ public class Ship {
 
     public void setTotalDamage(Long totalDamage) {
         this.totalDamage = totalDamage;
+    }
+
+    public Set<String> getHitsLocationsShip(Salvo salvo) {
+        return getLocations().stream().filter(location -> salvo.getSalvoLocations()
+                .stream().anyMatch(salvoLocation -> salvoLocation.equals(location))).collect(Collectors.toSet());
+    }
+
+    public boolean isSunk() {
+        return getTotalDamage() == length();
     }
 }

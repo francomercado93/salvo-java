@@ -90,29 +90,45 @@ public class Salvo {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", this.getTurn());
         dto.put("hitLocations", gamePlayerLogged.getHitsLocations(this));
-//        dto.put("damages", this.getDamages(gamePlayerLogged));
+        dto.put("damages", this.getDamages(gamePlayerLogged));
+        dto.put("missed", this.getNumberShipsMissed(gamePlayerLogged));
         return dto;
+    }
+
+    private Long getNumberShipsMissed(GamePlayer gamePlayerLogged) {
+        return getShipsMissed(gamePlayerLogged).stream().count();
+    }
+
+    private Set<Ship> getShipsMissed(GamePlayer gamePlayerLogged) {
+        return gamePlayerLogged.getShips().stream().filter(ship -> ship.isSunk()).collect(Collectors.toSet());
     }
 
     private Map<String, Object> getDamages(GamePlayer gamePlayerLogged) {
         Map<String, Object> damages = new LinkedHashMap<>();
         damages.put("carrierHits", getHitsShip(gamePlayerLogged, "carrier"));
-//        damages.put("battleshipHits", getHitsShip(gamePlayerLogged, "battleship"));
+        damages.put("battleshipHits", getHitsShip(gamePlayerLogged, "battleship"));
         damages.put("submarineHits", getHitsShip(gamePlayerLogged, "submarine"));
         damages.put("destroyerHits", getHitsShip(gamePlayerLogged, "destroyer"));
-        damages.put("patrolBoatHits", getHitsShip(gamePlayerLogged, "patrolboat"));
-//        damages.put("carrier", getDamageShip(gamePlayerLogged, "carrier"));
+        damages.put("patrolboatHits", getHitsShip(gamePlayerLogged, "patrolboat"));
+        damages.put("carrier", getTotalDamageShip(gamePlayerLogged, "carrier"));
+        damages.put("battleship", getTotalDamageShip(gamePlayerLogged, "battleship"));
+        damages.put("submarine", getTotalDamageShip(gamePlayerLogged, "submarine"));
+        damages.put("destroyer", getTotalDamageShip(gamePlayerLogged, "destroyer"));
+        damages.put("patrolboat", getTotalDamageShip(gamePlayerLogged, "patrolboat"));
         return damages;
     }
 
-    private Long getDamageShip(GamePlayer gamePlayerLogged, String type) {
-        return gamePlayerLogged.getShips().stream().filter(ship -> ship.getType().equals(type)).collect(Collectors.toList()).get(0).getTotalDamage();
+    private Long getTotalDamageShip(GamePlayer gamePlayerLogged, String type) {
+        return getShip(gamePlayerLogged, type).getTotalDamage();
     }
 
     private Long getHitsShip(GamePlayer gamePlayerLogged, String type) {
-//        Busco el barco que paso como parametro y una vez que lo encuentra obtengo el daño que sufrio el barco
+        return getShip(gamePlayerLogged, type).getDamage(this);
+    }
+
+    private Ship getShip(GamePlayer gamePlayerLogged, String type) {
         return gamePlayerLogged.getShips()
                 .stream().filter(ship -> ship.getType().equals(type))
-                .collect(Collectors.toList()).get(0).getDamage(this);
+                .findFirst().orElse(new Ship(type));
     }
 }
