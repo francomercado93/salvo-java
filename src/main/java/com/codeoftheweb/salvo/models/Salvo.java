@@ -105,7 +105,7 @@ public class Salvo {
 
     private Map<String, Object> getDamages(GamePlayer gamePlayerLogged) {
         Map<String, Object> damages = new LinkedHashMap<>();
-//     TODO: refactorizar para usar un forEach
+//     TODO: inicializar ships que faltan en el juego de datos inicial???
         gamePlayerLogged.getShips().forEach(ship -> {
             damages.put(ship.getType() + "Hits", getHitsShip(gamePlayerLogged, ship.getType()));
         });
