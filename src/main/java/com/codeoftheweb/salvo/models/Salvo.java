@@ -106,16 +106,22 @@ public class Salvo {
     private Map<String, Object> getDamages(GamePlayer gamePlayerLogged) {
         Map<String, Object> damages = new LinkedHashMap<>();
 //     TODO: refactorizar para usar un forEach
-        damages.put("carrierHits", getHitsShip(gamePlayerLogged, "carrier"));
-        damages.put("battleshipHits", getHitsShip(gamePlayerLogged, "battleship"));
-        damages.put("submarineHits", getHitsShip(gamePlayerLogged, "submarine"));
-        damages.put("destroyerHits", getHitsShip(gamePlayerLogged, "destroyer"));
-        damages.put("patrolboatHits", getHitsShip(gamePlayerLogged, "patrolboat"));
-        damages.put("carrier", getTotalDamageShip(gamePlayerLogged, "carrier"));
-        damages.put("battleship", getTotalDamageShip(gamePlayerLogged, "battleship"));
-        damages.put("submarine", getTotalDamageShip(gamePlayerLogged, "submarine"));
-        damages.put("destroyer", getTotalDamageShip(gamePlayerLogged, "destroyer"));
-        damages.put("patrolboat", getTotalDamageShip(gamePlayerLogged, "patrolboat"));
+        gamePlayerLogged.getShips().forEach(ship -> {
+            damages.put(ship.getType() + "Hits", getHitsShip(gamePlayerLogged, ship.getType()));
+        });
+//        damages.put("carrierHits", getHitsShip(gamePlayerLogged, "carrier"));
+//        damages.put("battleshipHits", getHitsShip(gamePlayerLogged, "battleship"));
+//        damages.put("submarineHits", getHitsShip(gamePlayerLogged, "submarine"));
+//        damages.put("destroyerHits", getHitsShip(gamePlayerLogged, "destroyer"));
+//        damages.put("patrolboatHits", getHitsShip(gamePlayerLogged, "patrolboat"));
+        gamePlayerLogged.getShips().forEach(ship -> {
+            damages.put(ship.getType(), getTotalDamageShip(gamePlayerLogged, ship.getType()));
+        });
+//        damages.put("carrier", getTotalDamageShip(gamePlayerLogged, "carrier"));
+//        damages.put("battleship", getTotalDamageShip(gamePlayerLogged, "battleship"));
+//        damages.put("submarine", getTotalDamageShip(gamePlayerLogged, "submarine"));
+//        damages.put("destroyer", getTotalDamageShip(gamePlayerLogged, "destroyer"));
+//        damages.put("patrolboat", getTotalDamageShip(gamePlayerLogged, "patrolboat"));
         return damages;
     }
 
