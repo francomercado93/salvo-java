@@ -81,15 +81,6 @@ public class Ship {
     }
 
     public Long getDamage(Salvo salvo) {
-//        Comparo la ubicacion del barco con todas las ubicaciones del salvo y cuento los hits para ese barco
-//        Long damageTurn = this.getLocations()
-//                .stream().filter(location -> salvo.getSalvoLocations()
-//                        .stream().anyMatch(salvoLocation -> salvo.equals(salvoLocation))).count();
-//        totalDamage += damageTurn;
-//        return damageTurn;
-//        return this.getLocations()
-//                .stream().filter(location -> salvo.getSalvoLocations()
-//                        .stream().anyMatch(salvoLocation -> salvo.equals(salvoLocation))).count();
         Long damageTurn = getHitsLocationsShip(salvo).stream().count();
         totalDamage += damageTurn;
         return damageTurn;

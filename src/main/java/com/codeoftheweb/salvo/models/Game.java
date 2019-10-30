@@ -89,6 +89,7 @@ public class Game {
                 .stream()
 //                REVISAR CUANDO UN SCORE ES NULL
                 .filter(gp -> gp.getScore() != null)
+//                .sorted(Comparator.comparingLong())
                 .map(gp -> gp.getScore().makeDTOScore())
                 .collect(toList()));
         return dto;
@@ -103,7 +104,7 @@ public class Game {
     }
 
     public GamePlayer getGamePlayerOpponet(GamePlayer gamePlayer) {
-//        FALTA VALIDACION CUANDO SOLO HAY UN GAMEPLAYER EN UN GAME
+//        cuando el gamePlayer es null creo un gamePlayer para que no rompa el frontend pero este nuevo gamePlayer no se guarda en la bd
         return this.gamePlayers.stream().filter(gp -> gp.getId() != gamePlayer.getId()).findFirst().orElse(new GamePlayer(gamePlayer.getGame()));
     }
 }

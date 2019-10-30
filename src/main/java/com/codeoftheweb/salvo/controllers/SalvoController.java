@@ -91,7 +91,8 @@ public class SalvoController {
     }
 
     private List<Map<String, Object>> getHits(GamePlayer gamePlayer1, GamePlayer gamePlayer2) {
-        return gamePlayer2.getSalvoes().stream().map(salvo -> salvo.makeDTOHits(gamePlayer1)).collect(Collectors.toList());
+        return gamePlayer2.getSalvoes().stream().sorted(Comparator.comparingInt(Salvo::getTurn))
+                .map(salvo -> salvo.makeDTOHits(gamePlayer1)).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
@@ -132,7 +133,8 @@ public class SalvoController {
         if (this.isPlayerNotValid(player, gamePlayer)) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(this.makeMap("ships", gamePlayer.getShips().stream().map(ship -> ship.makeDTOShip())), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(this.makeMap("ships", gamePlayer.getShips()
+                .stream().sorted(Comparator.comparingLong(Ship::getId)).map(ship -> ship.makeDTOShip())), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping("/games/players/{nn}/salvoes")
@@ -154,7 +156,7 @@ public class SalvoController {
     }
 
     private Object makeDTOSalvoes(GamePlayer gamePlayer) {
-        return gamePlayer.getSalvoes().stream().map(salvo -> salvo.makeDTOSalvo());
+        return gamePlayer.getSalvoes().stream().sorted(Comparator.comparingInt(Salvo::getTurn)).map(salvo -> salvo.makeDTOSalvo());
     }
 
     @RequestMapping(value = "/games/players/{nn}/salvoes", method = RequestMethod.POST)
@@ -170,15 +172,28 @@ public class SalvoController {
         if (gamePlayer.getPlayer().getId() != playerRepository.findByUserName(authentication.getName()).getId()) {
             return getResponseEntity("error", "Unauthorized", HttpStatus.UNAUTHORIZED);
         }
-        if (gamePlayer.getSalvoes().stream().anyMatch(salvo1 -> salvo1.getTurn() == salvo.getTurn()) ||
-                salvo.getTurn() > 127) {
-            return getResponseEntity("error", "No se puede crear un salvo para este turno", HttpStatus.FORBIDDEN);
+//        Cambiar para que el metodo eeste en la clase GamePlayer
+//        Si getGamePlayerOpponent no encuentra devuelve un gamePlayer nuevo pero que no se periste en la bd
+        GamePlayer opponent = gamePlayer.getGame().getGamePlayerOpponet(gamePlayer);
+        if (opponent.getId() == null) {
+            return getResponseEntity("error", "No existe un oponente", HttpStatus.FORBIDDEN);
         }
+//        No puede ingresar un salvo hasta que el otro oponente ingrese su salvo
+        if (!(gamePlayer.numberOfSalvos() == opponent.numberOfSalvos())) {
+            return getResponseEntity("error", "No puede ingresar un nuevo salvo hasta que el oponente ingrese su salvo", HttpStatus.FORBIDDEN);
+        }
+
         if (salvo.getNumberLocations() > 5) {
             return getResponseEntity("error", "Too many shots in salvo", HttpStatus.FORBIDDEN);
         }
+
+//        if (gamePlayer.getSalvoes().stream().anyMatch(salvo1 -> salvo1.getTurn() == salvo.getTurn()) ||
+//                salvo.getTurn() > 127) {
+//            return getResponseEntity("error", "No se puede crear un salvo para este turno", HttpStatus.FORBIDDEN);
+//        }
+
+        salvo.setTurn(gamePlayer.numberOfSalvos() + 1);
         gamePlayer.addSalvo(salvo);
-//            gamePlayerRepository.save(gamePlayer);
         salvoRepository.save(salvo);
         return getResponseEntity("OK", "OK", HttpStatus.CREATED);
     }
@@ -202,12 +217,14 @@ public class SalvoController {
                 .stream()
                 .flatMap(gp -> gp.getSalvoes()
                         .stream()
+                        .sorted(Comparator.comparingInt(Salvo::getTurn))
                         .map(salvo -> salvo.makeDTOSalvo())));
     }
 
     private void putShips(GamePlayer gamePlayer, Map<String, Object> dto) {
         dto.put("ships", gamePlayer.getShips()
                 .stream()
+                .sorted(Comparator.comparingLong(Ship::getId))
                 .map(ship -> ship.makeDTOShip())
                 .collect(Collectors.toList()));
     }

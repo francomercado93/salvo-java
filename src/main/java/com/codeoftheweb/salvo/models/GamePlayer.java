@@ -13,7 +13,7 @@ public class GamePlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private long id;
+    private Long id;
 
     private LocalDateTime joinDate;
 
@@ -48,11 +48,11 @@ public class GamePlayer {
         return player;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -122,4 +122,7 @@ public class GamePlayer {
         return getShips().stream().flatMap(ship -> ship.getHitsLocationsShip(salvo).stream()).collect(Collectors.toSet());
     }
 
+    public Integer numberOfSalvos() {
+        return getSalvoes().size();
+    }
 }

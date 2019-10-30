@@ -105,6 +105,7 @@ public class Salvo {
 
     private Map<String, Object> getDamages(GamePlayer gamePlayerLogged) {
         Map<String, Object> damages = new LinkedHashMap<>();
+//     TODO: refactorizar para usar un forEach
         damages.put("carrierHits", getHitsShip(gamePlayerLogged, "carrier"));
         damages.put("battleshipHits", getHitsShip(gamePlayerLogged, "battleship"));
         damages.put("submarineHits", getHitsShip(gamePlayerLogged, "submarine"));
