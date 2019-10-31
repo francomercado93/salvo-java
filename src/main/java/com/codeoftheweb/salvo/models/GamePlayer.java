@@ -122,7 +122,13 @@ public class GamePlayer {
         return getShips().stream().flatMap(ship -> ship.getHitsLocationsShip(salvo).stream()).collect(Collectors.toSet());
     }
 
-    public Integer numberOfSalvos() {
+    public Integer getNumberOfSalvos() {
         return getSalvoes().size();
+    }
+
+    public GamePlayer getGamePlayerOpponet() {
+//        cuando el gamePlayer es null creo un gamePlayer para que no rompa el frontend pero este nuevo gamePlayer no se guarda en la bd
+        return getGame().getGamePlayers().stream().filter(gp -> gp.getId() != this.getId())
+                .findFirst().orElse(new GamePlayer(this.getGame()));
     }
 }

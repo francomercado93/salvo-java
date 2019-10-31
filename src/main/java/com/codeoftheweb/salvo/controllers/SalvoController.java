@@ -35,18 +35,20 @@ public class SalvoController {
     @Autowired
     private SalvoRepository salvoRepository;
 
-    @RequestMapping(path = "/game/{nn}/players", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> joinGame(Authentication authentication, @PathVariable Long nn) {
+    @RequestMapping(path = "/game/{gameId}/players", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> joinGame(Authentication authentication, @PathVariable Long gameId) {
 
         if (this.isGuest(authentication)) {
             return getResponseEntity("error", "Unauthorized", HttpStatus.UNAUTHORIZED);
         }
         Player player = playerRepository.findByUserName(authentication.getName());
-        Game game = gameRepository.findById(nn).orElse(null);
+        Game game = gameRepository.findById(gameId).orElse(null);
         if (game == null) {
             return getResponseEntity("error", "No such game", HttpStatus.FORBIDDEN);
         }
-        if (game.getGamePlayers().size() > 1) {
+//      TODO: validar que un usuario no se pueda unir a un game dos veces a traves de un request POST
+
+        if (game.getNumberGamePlayers() > 1) {
             return getResponseEntity("error", "Game is full", HttpStatus.FORBIDDEN);
         }
         GamePlayer newGamePlayer = new GamePlayer(player, game);
@@ -59,20 +61,21 @@ public class SalvoController {
     }
 
     //Le paso el id de gamePlayer y en el json el primer id es el del game
-    @RequestMapping("/game_view/{nn}")
-    public ResponseEntity<Map<String, Object>> getGamePlayerInformation(@PathVariable Long nn, Authentication authentication) {
+    @RequestMapping("/game_view/{gamePlayerId}")
+    public ResponseEntity<Map<String, Object>> getGamePlayerInformation(@PathVariable Long gamePlayerId, Authentication authentication) {
 
         if (this.isGuest(authentication)) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
         Player player = playerRepository.findByUserName(authentication.getName());
-        GamePlayer gamePlayer = gamePlayerRepository.findById(nn).orElse(null);
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
         if (gamePlayer == null) {
-            return getResponseEntity("error", "No existe gamePlayer con el id " + nn, HttpStatus.FORBIDDEN);
+            return getResponseEntity("error", "No existe gamePlayer con el id " + gamePlayerId, HttpStatus.FORBIDDEN);
         }
         if (this.isPlayerNotValid(player, gamePlayer)) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
+//        Cuando se crea un nuevo gamePlayer, que campos se deberian mostrar del json game view ?
         Game game = gamePlayer.getGame();
         Map<String, Object> dto = game.makeOwnerDTOGames();
         putShips(gamePlayer, dto);
@@ -82,8 +85,7 @@ public class SalvoController {
     }
 
     private void putHits(GamePlayer gamePlayerLogged, Map<String, Object> dto) {
-        Game game = gamePlayerLogged.getGame();
-        GamePlayer gamePlayerOpponent = game.getGamePlayerOpponet(gamePlayerLogged);
+        GamePlayer gamePlayerOpponent = gamePlayerLogged.getGamePlayerOpponet();
         Map<String, Object> hits = new LinkedHashMap<>();
         hits.put("self", getHits(gamePlayerLogged, gamePlayerOpponent));
         hits.put("opponent", getHits(gamePlayerOpponent, gamePlayerLogged));
@@ -98,6 +100,7 @@ public class SalvoController {
     @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> placeShips(@PathVariable Long gamePlayerId,
                                                           @RequestBody Set<Ship> ships, Authentication authentication) {
+
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
 
         if (gamePlayer == null) {
@@ -137,16 +140,16 @@ public class SalvoController {
                 .stream().sorted(Comparator.comparingLong(Ship::getId)).map(ship -> ship.makeDTOShip())), HttpStatus.ACCEPTED);
     }
 
-    @RequestMapping("/games/players/{nn}/salvoes")
-    public ResponseEntity<Map<String, Object>> getPlaceSalvoes(Authentication authentication, @PathVariable Long nn) {
+    @RequestMapping("/games/players/{gamePlayerId}/salvoes")
+    public ResponseEntity<Map<String, Object>> getPlaceSalvoes(Authentication authentication, @PathVariable Long gamePlayerId) {
 
-        GamePlayer gamePlayer = gamePlayerRepository.findById(nn).orElse(null);
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
 //      SE REPITE CODIGO
         if (this.isGuest(authentication)) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
         if (gamePlayer == null) {
-            return getResponseEntity("error", "No existe gamePlayer con el id " + nn, HttpStatus.FORBIDDEN);
+            return getResponseEntity("error", "No existe gamePlayer con el id " + gamePlayerId, HttpStatus.FORBIDDEN);
         }
         if ((this.isPlayerNotValid(playerRepository.findByUserName(authentication.getName()), gamePlayer))) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
@@ -159,12 +162,12 @@ public class SalvoController {
         return gamePlayer.getSalvoes().stream().sorted(Comparator.comparingInt(Salvo::getTurn)).map(salvo -> salvo.makeDTOSalvo());
     }
 
-    @RequestMapping(value = "/games/players/{nn}/salvoes", method = RequestMethod.POST)
-    public ResponseEntity<Map<String, Object>> placeSalvoes(@PathVariable Long nn,
+    @RequestMapping(value = "/games/players/{gamePlayerId}/salvoes", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> placeSalvoes(@PathVariable Long gamePlayerId,
                                                             @RequestBody Salvo salvo, Authentication authentication) {
-        GamePlayer gamePlayer = gamePlayerRepository.findById(nn).orElse(null);
+        GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
         if (gamePlayer == null) {
-            return getResponseEntity("error", "No existe el game player con el id" + nn, HttpStatus.FORBIDDEN);
+            return getResponseEntity("error", "No existe el game player con el id" + gamePlayerId, HttpStatus.FORBIDDEN);
         }
         if (this.isGuest(authentication)) {
             return getResponseEntity("error", "Unauthorized", HttpStatus.UNAUTHORIZED);
@@ -174,12 +177,12 @@ public class SalvoController {
         }
 //        Cambiar para que el metodo eeste en la clase GamePlayer
 //        Si getGamePlayerOpponent no encuentra devuelve un gamePlayer nuevo pero que no se periste en la bd
-        GamePlayer opponent = gamePlayer.getGame().getGamePlayerOpponet(gamePlayer);
+        GamePlayer opponent = gamePlayer.getGamePlayerOpponet();
         if (opponent.getId() == null) {
             return getResponseEntity("error", "No existe un oponente", HttpStatus.FORBIDDEN);
         }
 //        No puede ingresar un salvo hasta que el otro oponente ingrese su salvo
-        if (!(gamePlayer.numberOfSalvos() == opponent.numberOfSalvos())) {
+        if (!(gamePlayer.getNumberOfSalvos() == opponent.getNumberOfSalvos())) {
             return getResponseEntity("error", "No puede ingresar un nuevo salvo hasta que el oponente ingrese su salvo", HttpStatus.FORBIDDEN);
         }
 
@@ -192,7 +195,7 @@ public class SalvoController {
 //            return getResponseEntity("error", "No se puede crear un salvo para este turno", HttpStatus.FORBIDDEN);
 //        }
 
-        salvo.setTurn(gamePlayer.numberOfSalvos() + 1);
+        salvo.setTurn(gamePlayer.getNumberOfSalvos() + 1);
         gamePlayer.addSalvo(salvo);
         salvoRepository.save(salvo);
         return getResponseEntity("OK", "OK", HttpStatus.CREATED);

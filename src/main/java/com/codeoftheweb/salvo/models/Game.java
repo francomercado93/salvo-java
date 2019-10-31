@@ -107,4 +107,8 @@ public class Game {
 //        cuando el gamePlayer es null creo un gamePlayer para que no rompa el frontend pero este nuevo gamePlayer no se guarda en la bd
         return this.gamePlayers.stream().filter(gp -> gp.getId() != gamePlayer.getId()).findFirst().orElse(new GamePlayer(gamePlayer.getGame()));
     }
+
+    public Integer getNumberGamePlayers() {
+        return getGamePlayers().size();
+    }
 }

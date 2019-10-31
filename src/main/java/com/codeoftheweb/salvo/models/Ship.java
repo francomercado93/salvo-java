@@ -81,9 +81,13 @@ public class Ship {
     }
 
     public Long getDamage(Salvo salvo) {
-        Long damageTurn = getHitsLocationsShip(salvo).stream().count();
+        Long damageTurn = getNumberHitsLocationShip(getHitsLocationsShip(salvo));
         totalDamage += damageTurn;
         return damageTurn;
+    }
+
+    private Long getNumberHitsLocationShip(Set<String> hitsLocationShip) {
+        return new Long(hitsLocationShip.size());
     }
 
     public Long getTotalDamage() {
