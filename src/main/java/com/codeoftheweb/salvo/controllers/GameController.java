@@ -62,6 +62,7 @@ public class GameController {
         if (game == null) {
             responseEntity = new ResponseEntity<>(this.makeMap("error", "No such game"), HttpStatus.FORBIDDEN);
         } else {
+//            revisar
             responseEntity = new ResponseEntity<>(game.makeOwnerDTOGames(), HttpStatus.ACCEPTED);
         }
         return responseEntity;

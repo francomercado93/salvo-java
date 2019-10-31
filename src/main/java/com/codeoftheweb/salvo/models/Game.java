@@ -79,7 +79,31 @@ public class Game {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
         dto.put("created", this.convertDateToMilliseconds());
-        dto.put("gameState", "PLACESHIPS");
+//        GamePlayer opponent = logged.getGamePlayerOpponet();
+//        otra forma: opponent.getId() == null
+        if (this.getNumberGamePlayers() < 2) {
+            dto.put("gameState", "WAITINGFOROPP");
+        }
+        if (this.getGamePlayers().stream().anyMatch(gamePlayer -> gamePlayer.getShips().isEmpty())) {
+//        if (logged.getShips().isEmpty()) {
+            dto.put("gameState", "PLACESHIPS");
+        }
+        if (this.getNumberGamePlayers() == 2) {
+            dto.put("gameState", "PLAY");
+        }
+
+//        if (opponent.getShips().isEmpty()) {
+//            dto.put("gameState", "WAIT");
+//        }
+
+//        if (this.getGamePlayers().stream().allMatch(gamePlayer -> gamePlayer.getShips().isEmpty())) {
+//            dto.put("gameState", "WAIT");
+//        }
+//        if (this.getGamePlayers().stream().anyMatch(gamePlayer -> gamePlayer.getSalvoes().isEmpty())) {
+//        dto.put("gameState", "WAIT");
+//        }
+
+//        dto.put("gameState", "PLAY");
         dto.put("gamePlayers", gamePlayers
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())
