@@ -63,7 +63,7 @@ public class GameController {
             responseEntity = new ResponseEntity<>(this.makeMap("error", "No such game"), HttpStatus.FORBIDDEN);
         } else {
 //            revisar
-            responseEntity = new ResponseEntity<>(game.makeOwnerDTOGames(), HttpStatus.ACCEPTED);
+            responseEntity = new ResponseEntity<>(game.makeOwnerDTOGames(null), HttpStatus.ACCEPTED);
         }
         return responseEntity;
     }
@@ -95,7 +95,7 @@ public class GameController {
     public List<Object> getAllGames() {
         return gameRepository.findAll()
                 .stream()
-                .map(owner -> owner.makeOwnerDTOGames())
+                .map(owner -> owner.makeOwnerDTOGames(null))
                 .collect(Collectors.toList());
     }
 

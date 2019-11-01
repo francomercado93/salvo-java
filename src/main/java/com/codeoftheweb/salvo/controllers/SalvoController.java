@@ -77,7 +77,7 @@ public class SalvoController {
         }
 //        Cuando se crea un nuevo gamePlayer, que campos se deberian mostrar del json game view ?
         Game game = gamePlayer.getGame();
-        Map<String, Object> dto = game.makeOwnerDTOGames();
+        Map<String, Object> dto = game.makeOwnerDTOGames(gamePlayer);
         putShips(gamePlayer, dto);
         putSalvoes(game, dto);
         putHits(gamePlayer, dto);
@@ -182,7 +182,7 @@ public class SalvoController {
             return getResponseEntity("error", "No existe un oponente", HttpStatus.FORBIDDEN);
         }
 //        No puede ingresar un salvo hasta que el otro oponente ingrese su salvo
-        if (!(gamePlayer.getNumberOfSalvos() == opponent.getNumberOfSalvos())) {
+        if (gamePlayer.getNumberOfSalvos() > opponent.getNumberOfSalvos()) {
             return getResponseEntity("error", "No puede ingresar un nuevo salvo hasta que el oponente ingrese su salvo", HttpStatus.FORBIDDEN);
         }
 
