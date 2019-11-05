@@ -69,7 +69,7 @@ public class Ship {
     }
 
     public long length() {
-        return locations.stream().count();
+        return locations.size();
     }
 
     public List<String> getLocations() {

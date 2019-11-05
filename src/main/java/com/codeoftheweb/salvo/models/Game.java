@@ -103,17 +103,31 @@ public class Game {
     }
 
     private String getGameState(GamePlayer logged) {
-        GamePlayer opponent = logged.getGamePlayerOpponet();
-        if (logged.getShips().isEmpty()) {
+        if (logged.noShips()) {
             return "PLACESHIPS";
         }
-        if (opponent.getId() == null) {
+        if (playerIsMissing()) {
             return "WAITINGFOROPP";
         }
-        if (opponent.getShips().isEmpty() || logged.getNumberOfSalvos() > opponent.getNumberOfSalvos()) {
+//        Si llega hasta aca es porque tiene un oponente
+        GamePlayer opponent = logged.getGamePlayerOpponet();
+        if (opponent.noShips() || logged.getNumberOfSalvos() > opponent.getNumberOfSalvos()) {
             return "WAIT";
         }
+        if (logged.shipsAreSunk()) {
+            return "LOST";
+        }
+        if (opponent.shipsAreSunk()) {
+            return "WON";
+        }
+        if (logged.shipsAreSunk() && opponent.shipsAreSunk()) {
+            return "TIE";
+        }
         return "PLAY";
+    }
+
+    private boolean playerIsMissing() {
+        return getGamePlayers().size() < 2;
     }
 
     private boolean shipsBothGamePlayerPlaced() {

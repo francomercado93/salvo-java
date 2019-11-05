@@ -131,4 +131,12 @@ public class GamePlayer {
         return getGame().getGamePlayers().stream().filter(gp -> gp.getId() != this.getId())
                 .findFirst().orElse(new GamePlayer(this.getGame()));
     }
+
+    public boolean noShips() {
+        return getShips().isEmpty();
+    }
+
+    public boolean shipsAreSunk() {
+        return getShips().stream().allMatch(ship -> ship.isSunk());
+    }
 }
