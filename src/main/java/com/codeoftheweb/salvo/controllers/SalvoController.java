@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,9 @@ public class SalvoController {
 
     @Autowired
     private ShipRepository shipRepository;
+
+    @Autowired
+    private ScoreRepository scoreRepository;
 
     @Autowired
     private SalvoRepository salvoRepository;
@@ -81,7 +85,15 @@ public class SalvoController {
         putShips(gamePlayer, dto);
         putSalvoes(game, dto);
         putHits(gamePlayer, dto);
-//        salvoRepository.save(new Score(game, player,));
+        if (game.getGameState().equals("WON")) {
+            scoreRepository.save(new Score(game, player, new BigDecimal(1)));
+        }
+        if (game.getGameState().equals("LOST")) {
+            scoreRepository.save(new Score(game, player, new BigDecimal(0)));
+        }
+        if (game.getGameState().equals("TIE")) {
+            scoreRepository.save(new Score(game, player, new BigDecimal(0.5)));
+        }
         return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
     }
 

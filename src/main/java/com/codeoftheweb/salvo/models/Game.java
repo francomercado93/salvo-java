@@ -3,13 +3,11 @@ package com.codeoftheweb.salvo.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.Nullable;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.core.Authentication;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,6 +26,9 @@ public class Game {
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private List<Score> scores = new ArrayList<>();
+
+    @Transient
+    private String gameState;
 
     public Game() {
     }
@@ -82,7 +83,8 @@ public class Game {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
         dto.put("created", this.convertDateToMilliseconds());
-        dto.put("gameState", this.getGameState(logged));
+        this.setGameState(logged);
+        dto.put("gameState", this.getGameState());
         dto.put("gamePlayers", gamePlayers
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())
@@ -98,39 +100,46 @@ public class Game {
         return dto;
     }
 
-    private String getGameState(GamePlayer logged) {
+    public String getGameState() {
+        return gameState;
+    }
+
+    public String setGameState(GamePlayer logged) {
         if (logged == null) {
-            return "PLACESHIPS";
+            gameState = "PLACESHIPS";
+            return gameState;
         }
         if (logged.noShips()) {
-            return "PLACESHIPS";
+            gameState = "PLACESHIPS";
+            return gameState;
         }
         if (playerIsMissing()) {
-            return "WAITINGFOROPP";
+            gameState = "WAITINGFOROPP";
+            return gameState;
         }
 //        Si llega hasta aca es porque tiene un oponente
         GamePlayer opponent = logged.getGamePlayerOpponet();
         if (opponent.noShips() || logged.getNumberOfSalvos() > opponent.getNumberOfSalvos()) {
-            return "WAIT";
+            gameState = "WAIT";
+            return gameState;
         }
         if (logged.getNumberOfSalvos() == opponent.getNumberOfSalvos()) {
             if (logged.shipsAreSunk(opponent) && opponent.shipsAreSunk(logged)) {
-                return "TIE";
+                gameState = "TIE";
+                return gameState;
             }
             if (logged.shipsAreSunk(opponent)) {
-                return "LOST";
+                gameState = "LOST";
+                return gameState;
             }
             if (opponent.shipsAreSunk(logged)) {
-                return "WON";
+                gameState = "WON";
+                return gameState;
             }
             System.out.println("entro");
-
         }
-        // vamos a testear las condiciones aca
-//        System.out.println("es tie: " + (logged.shipsAreSunk() && opponent.shipsAreSunk())); // true si es empate
-//        System.out.println("es lost: " + (logged.shipsAreSunk()));
-//        System.out.println("es Won: " + (opponent.shipsAreSunk()));
-        return "PLAY";
+        gameState = "PLAY";
+        return gameState;
     }
 
     private boolean playerIsMissing() {
