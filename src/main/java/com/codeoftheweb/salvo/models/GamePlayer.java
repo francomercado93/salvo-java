@@ -119,7 +119,10 @@ public class GamePlayer {
     }
 
     public Set<String> getHitsLocations(Salvo salvo) {
-        return getShips().stream().flatMap(ship -> ship.getHitsLocationsShip(salvo).stream()).collect(Collectors.toSet());
+        return getShips()
+                .stream()
+                .flatMap(ship -> ship.getHitsLocationsShip(salvo).stream())
+                .collect(Collectors.toSet());
     }
 
     public Integer getNumberOfSalvos() {
@@ -128,15 +131,46 @@ public class GamePlayer {
 
     public GamePlayer getGamePlayerOpponet() {
 //        cuando el gamePlayer es null creo un gamePlayer para que no rompa el frontend pero este nuevo gamePlayer no se guarda en la bd
-        return getGame().getGamePlayers().stream().filter(gp -> gp.getId() != this.getId())
-                .findFirst().orElse(new GamePlayer(this.getGame()));
+        return getGame()
+                .getGamePlayers()
+                .stream()
+                .filter(gp -> gp.getId() != this.getId())
+                .findFirst()
+                .orElse(new GamePlayer(this.getGame()));
     }
 
     public boolean noShips() {
         return getShips().isEmpty();
     }
 
-    public boolean shipsAreSunk() {
-        return getShips().stream().allMatch(ship -> ship.isSunk());
+    public boolean shipsAreSunk(GamePlayer opponent) {
+        return getShips()
+                .stream()
+                .allMatch(ship -> ship.isSunk(opponent));
     }
+
+    public Integer getSalvoesMissed(Salvo salvo) {
+        return getShips()
+                .stream()
+                .flatMap(ship -> ship.getMissedSalvoes(salvo).stream())
+                .collect(Collectors.toSet()).size();
+    }
+
+//    public boolean shipsAreSunk(GamePlayer opponent) {
+//        return sizeShips() == opponent.getSalvoes().stream().flatMap(salvo -> salvo.);
+//    }
+//
+//    public List<String> locationAllShips() {
+//        return getShips().stream().flatMap(ship -> ship.getLocations().stream()).collect(Collectors.toList());
+//    }
+//
+//    public Integer sizeShips() {
+//        return locationAllShips().size();
+//    }
+
+//    public boolean shipsAreSunk() {
+//        return getShips()
+//                .stream()
+//                .allMatch(ship -> ship.isSunk());
+//    }
 }

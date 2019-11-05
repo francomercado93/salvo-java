@@ -89,23 +89,15 @@ public class Salvo {
     public Map<String, Object> makeDTOHits(GamePlayer gamePlayerLogged) {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", this.getTurn());
-        dto.put("hitLocations", gamePlayerLogged.getHitsLocations(this));
         dto.put("damages", this.getDamages(gamePlayerLogged));
-        dto.put("missed", this.getNumberShipsMissed(gamePlayerLogged));
+        dto.put("hitLocations", gamePlayerLogged.getHitsLocations(this));
+//        TODO: revisar
+        dto.put("missed", gamePlayerLogged.getSalvoesMissed(this));
         return dto;
-    }
-
-    private Long getNumberShipsMissed(GamePlayer gamePlayerLogged) {
-        return getShipsMissed(gamePlayerLogged).stream().count();
-    }
-
-    private Set<Ship> getShipsMissed(GamePlayer gamePlayerLogged) {
-        return gamePlayerLogged.getShips().stream().filter(ship -> ship.isSunk()).collect(Collectors.toSet());
     }
 
     private Map<String, Object> getDamages(GamePlayer gamePlayerLogged) {
         Map<String, Object> damages = new LinkedHashMap<>();
-
         damages.put("carrierHits", 0);
         damages.put("battleshipHits", 0);
         damages.put("submarineHits", 0);
@@ -135,7 +127,6 @@ public class Salvo {
 //    }
 
     private Ship getShip(GamePlayer gamePlayerLogged, String type) {
-//
         return gamePlayerLogged.getShips()
                 .stream().filter(ship -> ship.getType().equals(type))
                 .findFirst().orElse(new Ship(type));

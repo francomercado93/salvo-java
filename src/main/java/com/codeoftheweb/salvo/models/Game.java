@@ -82,11 +82,7 @@ public class Game {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", this.getId());
         dto.put("created", this.convertDateToMilliseconds());
-        if (logged == null) {
-            dto.put("gameState", "PLACESHIPS");
-        } else {
-            dto.put("gameState", this.getGameState(logged));
-        }
+        dto.put("gameState", this.getGameState(logged));
         dto.put("gamePlayers", gamePlayers
                 .stream()
                 .map(gp -> gp.makeOwnerDtoGamePlayer())
@@ -103,6 +99,9 @@ public class Game {
     }
 
     private String getGameState(GamePlayer logged) {
+        if (logged == null) {
+            return "PLACESHIPS";
+        }
         if (logged.noShips()) {
             return "PLACESHIPS";
         }
@@ -114,15 +113,23 @@ public class Game {
         if (opponent.noShips() || logged.getNumberOfSalvos() > opponent.getNumberOfSalvos()) {
             return "WAIT";
         }
-        if (logged.shipsAreSunk()) {
-            return "LOST";
+        if (logged.getNumberOfSalvos() == opponent.getNumberOfSalvos()) {
+            if (logged.shipsAreSunk(opponent) && opponent.shipsAreSunk(logged)) {
+                return "TIE";
+            }
+            if (logged.shipsAreSunk(opponent)) {
+                return "LOST";
+            }
+            if (opponent.shipsAreSunk(logged)) {
+                return "WON";
+            }
+            System.out.println("entro");
+
         }
-        if (opponent.shipsAreSunk()) {
-            return "WON";
-        }
-        if (logged.shipsAreSunk() && opponent.shipsAreSunk()) {
-            return "TIE";
-        }
+        // vamos a testear las condiciones aca
+//        System.out.println("es tie: " + (logged.shipsAreSunk() && opponent.shipsAreSunk())); // true si es empate
+//        System.out.println("es lost: " + (logged.shipsAreSunk()));
+//        System.out.println("es Won: " + (opponent.shipsAreSunk()));
         return "PLAY";
     }
 
@@ -144,7 +151,11 @@ public class Game {
 
     public GamePlayer getGamePlayerOpponet(GamePlayer gamePlayer) {
 //        cuando el gamePlayer es null creo un gamePlayer para que no rompa el frontend pero este nuevo gamePlayer no se guarda en la bd
-        return this.gamePlayers.stream().filter(gp -> gp.getId() != gamePlayer.getId()).findFirst().orElse(new GamePlayer(gamePlayer.getGame()));
+        return this.gamePlayers
+                .stream()
+                .filter(gp -> gp.getId() != gamePlayer.getId())
+                .findFirst()
+                .orElse(new GamePlayer(gamePlayer.getGame()));
     }
 
     public Integer getNumberGamePlayers() {

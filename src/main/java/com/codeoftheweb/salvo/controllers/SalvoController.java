@@ -81,6 +81,7 @@ public class SalvoController {
         putShips(gamePlayer, dto);
         putSalvoes(game, dto);
         putHits(gamePlayer, dto);
+//        salvoRepository.save(new Score(game, player,));
         return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
     }
 

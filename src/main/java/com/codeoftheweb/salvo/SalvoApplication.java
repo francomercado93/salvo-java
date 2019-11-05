@@ -187,7 +187,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
             gamePlayerCG1.addShip(patrolBoatCGP1);
             gamePlayerJG2.addShip(destroyerJGP2);
             gamePlayerJG2.addShip(patrolBoatJGP2);
-            gamePlayerJG2.addShip(patrolBoatCGP2);
+//            gamePlayerJG2.addShip(patrolBoatCGP2);
             gamePlayerCG2.addShip(submarineCGP2);
             gamePlayerCG3.addShip(destroyerCGP3);
             gamePlayerCG3.addShip(patrolBoatCGP3);
@@ -258,7 +258,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
             Salvo salvo3 = new Salvo(2, new HashSet<>(Arrays.asList("F2", "D5")));
             Salvo salvo2 = new Salvo(1, new HashSet<>(Arrays.asList("B4", "B5", "B6")));
             Salvo salvo4 = new Salvo(2, new HashSet<>(Arrays.asList("E1", "H3", "A2")));
-            Salvo salvo5 = new Salvo(1, new HashSet<>(Arrays.asList("A2", "A4", "A6")));
+            Salvo salvo5 = new Salvo(1, new HashSet<>(Arrays.asList("A2", "A4", "G6")));
             Salvo salvo7 = new Salvo(2, new HashSet<>(Arrays.asList("A3", "H6")));
             Salvo salvo6 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "D5", "C7")));
             Salvo salvo8 = new Salvo(2, new HashSet<>(Arrays.asList("C5", "C6")));
@@ -267,14 +267,14 @@ public class SalvoApplication extends SpringBootServletInitializer {
             Salvo salvo10 = new Salvo(1, new HashSet<>(Arrays.asList("H1", "H2", "H3")));
             Salvo salvo12 = new Salvo(2, new HashSet<>(Arrays.asList("E1", "F2", "G3")));
             Salvo salvo13 = new Salvo(1, new HashSet<>(Arrays.asList("A3", "A4", "F7")));
-            Salvo salvo14 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "C6", "H1")));
             Salvo salvo15 = new Salvo(2, new HashSet<>(Arrays.asList("A2", "G6", "H6")));
+            Salvo salvo14 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "C6", "H1")));
             Salvo salvo16 = new Salvo(2, new HashSet<>(Arrays.asList("C5", "C7", "D5")));
             Salvo salvo17 = new Salvo(1, new HashSet<>(Arrays.asList("A1", "A2", "A3")));
-            Salvo salvo18 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "B6", "B7")));
             Salvo salvo19 = new Salvo(2, new HashSet<>(Arrays.asList("G6", "G7", "G8")));
+            Salvo salvo18 = new Salvo(1, new HashSet<>(Arrays.asList("B5", "B6", "C7")));
             Salvo salvo20 = new Salvo(2, new HashSet<>(Arrays.asList("C6", "D6", "E6")));
-//            Salvo salvo21 = new Salvo(3, new HashSet<>(Arrays.asList("H1", "H8")));
+            Salvo salvo21 = new Salvo(3, new HashSet<>(Arrays.asList("H1", "H8")));
 
             gamePlayerJG1.addSalvoes(new HashSet<>(Arrays.asList(salvo1, salvo3)));
             gamePlayerCG1.addSalvoes(new HashSet<>(Arrays.asList(salvo2, salvo4)));
@@ -285,7 +285,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
             gamePlayerCG4.addSalvoes(new HashSet<>(Arrays.asList(salvo13, salvo15)));
             gamePlayerJG4.addSalvoes(new HashSet<>(Arrays.asList(salvo14, salvo16)));
             gamePlayerTG5.addSalvoes(new HashSet<>(Arrays.asList(salvo17, salvo19)));
-            gamePlayerJG5.addSalvoes(new HashSet<>(Arrays.asList(salvo18, salvo20)));
+            gamePlayerJG5.addSalvoes(new HashSet<>(Arrays.asList(salvo18, salvo20, salvo21)));
 
             salvoRepository.save(salvo1);
             salvoRepository.save(salvo2);

@@ -68,8 +68,8 @@ public class Ship {
         return dto;
     }
 
-    public long length() {
-        return locations.size();
+    public Long length() {
+        return new Long(locations.size());
     }
 
     public List<String> getLocations() {
@@ -81,13 +81,13 @@ public class Ship {
     }
 
     public Long getDamage(Salvo salvo) {
-        Long damageTurn = getNumberHitsLocationShip(getHitsLocationsShip(salvo));
+        Long damageTurn = getNumberHitsLocationShip(salvo);
         totalDamage += damageTurn;
         return damageTurn;
     }
 
-    private Long getNumberHitsLocationShip(Set<String> hitsLocationShip) {
-        return new Long(hitsLocationShip.size());
+    private Long getNumberHitsLocationShip(Salvo salvo) {
+        return new Long(getHitsLocationsShip(salvo).size());
     }
 
     public Long getTotalDamage() {
@@ -99,11 +99,39 @@ public class Ship {
     }
 
     public Set<String> getHitsLocationsShip(Salvo salvo) {
-        return getLocations().stream().filter(location -> salvo.getSalvoLocations()
-                .stream().anyMatch(salvoLocation -> salvoLocation.equals(location))).collect(Collectors.toSet());
+        return getLocations()
+                .stream()
+                .filter(location -> salvo.getSalvoLocations()
+                        .stream()
+                        .anyMatch(salvoLocation -> salvoLocation.equals(location)))
+                .collect(Collectors.toSet());
     }
 
-    public boolean isSunk() {
-        return getTotalDamage() == length();
+    public Set<String> getMissedSalvoes(Salvo salvo) {
+        return getLocations()
+                .stream()
+                .filter(location -> salvo.getSalvoLocations()
+                        .stream()
+                        .anyMatch(salvoLocation -> !salvoLocation.equals(location)))
+                .collect(Collectors.toSet());
     }
+
+    public boolean isSunk(GamePlayer opponent) {
+        List<String> salvoLocation = opponent
+                .getSalvoes().stream()
+                .map(salvo -> salvo.getSalvoLocations())
+                .flatMap(locations -> locations.stream()).collect(Collectors.toList());
+        Long hitsShip = new Long(0);
+        for (String salvoLocatio : salvoLocation) {
+            if (this.getLocations().contains(salvoLocatio)) {
+                hitsShip++;
+            }
+        }
+        return hitsShip.compareTo(this.length()) == 0;
+    }
+// TODO: probar de nuevo
+//    public boolean isSunk() {
+//        return getTotalDamage().equals(this.length());
+//    }
+
 }
