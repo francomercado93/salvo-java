@@ -162,7 +162,7 @@ public class Game {
 
     public GamePlayer getGamePlayerOpponet(GamePlayer gamePlayer) {
 //        cuando el gamePlayer es null creo un gamePlayer para que no rompa el frontend pero este nuevo gamePlayer no se guarda en la bd
-        return this.gamePlayers
+        return getGamePlayers()
                 .stream()
                 .filter(gp -> gp.getId() != gamePlayer.getId())
                 .findFirst()
