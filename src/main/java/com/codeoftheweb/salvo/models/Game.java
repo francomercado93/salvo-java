@@ -136,7 +136,6 @@ public class Game {
                 gameState = "WON";
                 return gameState;
             }
-            System.out.println("entro");
         }
         gameState = "PLAY";
         return gameState;
@@ -147,7 +146,10 @@ public class Game {
     }
 
     private boolean shipsBothGamePlayerPlaced() {
-        return !getGamePlayers().stream().allMatch(gamePlayer -> gamePlayer.getShips().isEmpty());
+        return !getGamePlayers()
+                .stream()
+                .allMatch(gamePlayer -> gamePlayer.getShips()
+                        .isEmpty());
     }
 
     private long convertDateToMilliseconds() {

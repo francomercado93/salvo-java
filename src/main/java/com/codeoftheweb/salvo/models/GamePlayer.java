@@ -125,6 +125,14 @@ public class GamePlayer {
                 .collect(Collectors.toSet());
     }
 
+    public Integer getNumberHitLocations(Salvo salvo) {
+        return getHitsLocations(salvo).size();
+    }
+
+    public Integer getNumberSalvoLocations(Salvo salvo) {
+        return salvo.getNumberLocations();
+    }
+
     public Integer getNumberOfSalvos() {
         return getSalvoes().size();
     }
@@ -150,18 +158,20 @@ public class GamePlayer {
     }
 
     public Integer getSalvoesMissed(Salvo salvo) {
-        return getShips()
-                .stream()
-                .flatMap(ship -> ship.getMissedSalvoes(salvo).stream())
-                .collect(Collectors.toSet()).size();
+        return getNumberSalvoLocations(salvo) - getNumberHitLocations(salvo);
     }
 
-//    public boolean shipsAreSunk(GamePlayer opponent) {
+    //    public boolean shipsAreSunk(GamePlayer opponent) {
 //        return sizeShips() == opponent.getSalvoes().stream().flatMap(salvo -> salvo.);
 //    }
 //
-//    public List<String> locationAllShips() {
-//        return getShips().stream().flatMap(ship -> ship.getLocations().stream()).collect(Collectors.toList());
+//    public Integer getNumberLocationAllShips() {
+//        return getShips()
+//                .stream()
+//                .flatMap(ship -> ship.getLocations()
+//                        .stream())
+//                .collect(Collectors.toList())
+//                .size();
 //    }
 //
 //    public Integer sizeShips() {

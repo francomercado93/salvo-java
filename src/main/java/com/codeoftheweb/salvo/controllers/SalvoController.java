@@ -106,8 +106,12 @@ public class SalvoController {
     }
 
     private List<Map<String, Object>> getHits(GamePlayer gamePlayer1, GamePlayer gamePlayer2) {
-        return gamePlayer2.getSalvoes().stream().sorted(Comparator.comparingInt(Salvo::getTurn))
-                .map(salvo -> salvo.makeDTOHits(gamePlayer1)).collect(Collectors.toList());
+        return gamePlayer2
+                .getSalvoes()
+                .stream()
+                .sorted(Comparator.comparingInt(Salvo::getTurn))
+                .map(salvo -> salvo.makeDTOHits(gamePlayer1))
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/ships", method = RequestMethod.POST)
@@ -163,6 +167,10 @@ public class SalvoController {
         }
         if (gamePlayer == null) {
             return getResponseEntity("error", "No existe gamePlayer con el id " + gamePlayerId, HttpStatus.FORBIDDEN);
+        }
+        Game game = gamePlayer.getGame();
+        if (game.getGameState().equals("WON") || game.getGameState().equals("LOST") || game.getGameState().equals("TIE")) {
+            return getResponseEntity("error", "El juego ha finalizado", HttpStatus.FORBIDDEN);
         }
         if ((this.isPlayerNotValid(playerRepository.findByUserName(authentication.getName()), gamePlayer))) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);

@@ -110,9 +110,9 @@ public class Ship {
     public Set<String> getMissedSalvoes(Salvo salvo) {
         return getLocations()
                 .stream()
-                .filter(location -> salvo.getSalvoLocations()
+                .filter(location -> getHitsLocationsShip(salvo)
                         .stream()
-                        .anyMatch(salvoLocation -> !salvoLocation.equals(location)))
+                        .anyMatch(hitLocation -> !hitLocation.equals(location)))
                 .collect(Collectors.toSet());
     }
 
@@ -120,7 +120,8 @@ public class Ship {
         List<String> salvoLocation = opponent
                 .getSalvoes().stream()
                 .map(salvo -> salvo.getSalvoLocations())
-                .flatMap(locations -> locations.stream()).collect(Collectors.toList());
+                .flatMap(locations -> locations.stream())
+                .collect(Collectors.toList());
         Long hitsShip = new Long(0);
         for (String salvoLocatio : salvoLocation) {
             if (this.getLocations().contains(salvoLocatio)) {

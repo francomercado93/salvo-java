@@ -119,6 +119,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
             GamePlayer gamePlayerKG6 = new GamePlayer(kimBauer, game6);
             GamePlayer gamePlayerTG8 = new GamePlayer(tony, game8);
             GamePlayer gamePlayerKG8 = new GamePlayer(kimBauer, game8);
+            GamePlayer gamePlayerTG7 = new GamePlayer(tony, game7);
 
             /* SHIPS */
 
@@ -222,6 +223,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
             gamePlayerRepository.save(gamePlayerKG6);
             gamePlayerRepository.save(gamePlayerTG8);
             gamePlayerRepository.save(gamePlayerKG8);
+            gamePlayerRepository.save(gamePlayerTG7);
 
             /*Guardo los gamePlayers primero para que se creen los ids  y luego puedo guardar las claves foraneas de
             los gamePlayers en la tabla ship*/

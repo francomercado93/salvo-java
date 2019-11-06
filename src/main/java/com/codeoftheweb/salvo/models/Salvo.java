@@ -76,9 +76,13 @@ public class Salvo {
     public Map<String, Object> makeDTOSalvo() {
         Map<String, Object> dto = new LinkedHashMap<>();
         dto.put("turn", this.getTurn());
-        dto.put("player", this.getGamePlayer().getPlayer().getId());
+        dto.put("player", getPlayerId());
         dto.put("locations", this.getSalvoLocations());
         return dto;
+    }
+
+    private long getPlayerId() {
+        return this.getGamePlayer().getPlayer().getId();
     }
 
     public Integer getNumberLocations() {
@@ -126,9 +130,12 @@ public class Salvo {
 //        return getShip(gamePlayerLogged, type).getDamage(this);
 //    }
 
-    private Ship getShip(GamePlayer gamePlayerLogged, String type) {
-        return gamePlayerLogged.getShips()
-                .stream().filter(ship -> ship.getType().equals(type))
-                .findFirst().orElse(new Ship(type));
+    private Ship getShipByType(GamePlayer gamePlayerLogged, String type) {
+        return gamePlayerLogged
+                .getShips()
+                .stream()
+                .filter(ship -> ship.getType().equals(type))
+                .findFirst()
+                .orElse(new Ship(type));
     }
 }
