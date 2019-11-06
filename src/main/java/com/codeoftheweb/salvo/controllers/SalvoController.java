@@ -85,16 +85,25 @@ public class SalvoController {
         putShips(gamePlayer, dto);
         putSalvoes(game, dto);
         putHits(gamePlayer, dto);
+        createScore(player, game);
+        return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
+    }
+
+    private void createScore(Player player, Game game) {
+        Score newScore = null;
         if (game.getGameState().equals("WON")) {
-            scoreRepository.save(new Score(game, player, new BigDecimal(1)));
+            newScore = new Score(game, player, new BigDecimal(1));
         }
         if (game.getGameState().equals("LOST")) {
-            scoreRepository.save(new Score(game, player, new BigDecimal(0)));
+            newScore = new Score(game, player, new BigDecimal(0));
         }
         if (game.getGameState().equals("TIE")) {
-            scoreRepository.save(new Score(game, player, new BigDecimal(0.5)));
+            newScore = new Score(game, player, new BigDecimal(0.5));
         }
-        return new ResponseEntity<>(dto, HttpStatus.ACCEPTED);
+        if (newScore != null) {
+            newScore.setScoreGamePlayer();
+            scoreRepository.save(newScore);
+        }
     }
 
     private void putHits(GamePlayer gamePlayerLogged, Map<String, Object> dto) {
@@ -175,7 +184,6 @@ public class SalvoController {
         if ((this.isPlayerNotValid(playerRepository.findByUserName(authentication.getName()), gamePlayer))) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
-//      SE REPITE CODIGO
         return new ResponseEntity<>(this.makeMap("salvoes", this.makeDTOSalvoes(gamePlayer)), HttpStatus.ACCEPTED);
     }
 
@@ -196,8 +204,6 @@ public class SalvoController {
         if (gamePlayer.getPlayer().getId() != playerRepository.findByUserName(authentication.getName()).getId()) {
             return getResponseEntity("error", "Unauthorized", HttpStatus.UNAUTHORIZED);
         }
-//        Cambiar para que el metodo eeste en la clase GamePlayer
-//        Si getGamePlayerOpponent no encuentra devuelve un gamePlayer nuevo pero que no se periste en la bd
         GamePlayer opponent = gamePlayer.getGamePlayerOpponet();
         if (opponent.getId() == null) {
             return getResponseEntity("error", "No existe un oponente", HttpStatus.FORBIDDEN);
@@ -210,11 +216,6 @@ public class SalvoController {
         if (salvo.getNumberLocations() > 5) {
             return getResponseEntity("error", "Too many shots in salvo", HttpStatus.FORBIDDEN);
         }
-
-//        if (gamePlayer.getSalvoes().stream().anyMatch(salvo1 -> salvo1.getTurn() == salvo.getTurn()) ||
-//                salvo.getTurn() > 127) {
-//            return getResponseEntity("error", "No se puede crear un salvo para este turno", HttpStatus.FORBIDDEN);
-//        }
 
         salvo.setTurn(gamePlayer.getNumberOfSalvos() + 1);
         gamePlayer.addSalvo(salvo);

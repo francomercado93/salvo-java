@@ -41,7 +41,7 @@ public class Score {
         this.game = game;
         this.player = player;
         this.score = score;
-        this.setScoreGamePlayer();
+//        this.setScoreGamePlayer();
         this.finishDate = game.getCreated().plusMinutes(30);
     }
 

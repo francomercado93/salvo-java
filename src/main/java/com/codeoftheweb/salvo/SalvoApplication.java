@@ -310,6 +310,14 @@ public class SalvoApplication extends SpringBootServletInitializer {
             Score score6 = new Score(game3, tony, new BigDecimal(0));
             Score score7 = new Score(game4, cObrian, new BigDecimal(0.5));
             Score score8 = new Score(game4, jackBauer, new BigDecimal(0.5));
+            score1.setScoreGamePlayer();
+            score2.setScoreGamePlayer();
+            score3.setScoreGamePlayer();
+            score4.setScoreGamePlayer();
+            score5.setScoreGamePlayer();
+            score6.setScoreGamePlayer();
+            score7.setScoreGamePlayer();
+            score8.setScoreGamePlayer();
 //            Score score9 = new Score(game5, tony);
 //            Score score10 = new Score(game5, jackBauer);
 //            Score score11 = new Score(game6, kimBauer);
