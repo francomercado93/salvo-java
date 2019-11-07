@@ -238,7 +238,8 @@ public class SalvoController {
     }
 
     private void putSalvoes(Game game, Map<String, Object> dto) {
-        dto.put("salvoes", game.getGamePlayers()
+        dto.put("salvoes", game
+                .getGamePlayers()
                 .stream()
                 .flatMap(gp -> gp.getSalvoes()
                         .stream()
@@ -247,7 +248,8 @@ public class SalvoController {
     }
 
     private void putShips(GamePlayer gamePlayer, Map<String, Object> dto) {
-        dto.put("ships", gamePlayer.getShips()
+        dto.put("ships", gamePlayer
+                .getShips()
                 .stream()
                 .sorted(Comparator.comparingLong(Ship::getId))
                 .map(ship -> ship.makeDTOShip())

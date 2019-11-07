@@ -63,13 +63,13 @@ public class Ship {
 
     public Map<String, Object> makeDTOShip() {
         Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("type", this.type);
-        dto.put("locations", this.locations);
+        dto.put("type", getType());
+        dto.put("locations", getLocations());
         return dto;
     }
 
-    public Long length() {
-        return new Long(locations.size());
+    public Long getLengthShip() {
+        return new Long(getLocations().size());
     }
 
     public List<String> getLocations() {
@@ -83,6 +83,8 @@ public class Ship {
     public Long getDamage(Salvo salvo) {
         Long damageTurn = getNumberHitsLocationShip(salvo);
         totalDamage += damageTurn;
+        System.out.println("player " + getGamePlayer().getPlayer() + "\nturn " + salvo.getTurn() + " total damage ship " + getType() + " " + getTotalDamage());
+        System.out.println("\nis sunk? " + this.isSunk2());
         return damageTurn;
     }
 
@@ -128,11 +130,14 @@ public class Ship {
                 hitsShip++;
             }
         }
-        return hitsShip.compareTo(this.length()) == 0;
+        return hitsShip.compareTo(this.getLengthShip()) == 0;
     }
-// TODO: probar de nuevo
-//    public boolean isSunk() {
-//        return getTotalDamage().equals(this.length());
-//    }
+
+    // TODO: probar de nuevo
+    public boolean isSunk2() {
+//        System.out.println("total damage " + getTotalDamage());
+//        System.out.println("length  " + this.getLengthShip());
+        return getTotalDamage().compareTo(this.getLengthShip()) == 0;
+    }
 
 }

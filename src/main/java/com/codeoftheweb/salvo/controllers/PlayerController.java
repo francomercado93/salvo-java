@@ -60,7 +60,8 @@ public class PlayerController {
 
     @RequestMapping("/players")
     public List<Object> getAllPlayers() {
-        return playerRepository.findAll()
+        return playerRepository
+                .findAll()
                 .stream()
                 .map(owner -> owner.makeOwnerDTOPlayers())
                 .collect(Collectors.toList());

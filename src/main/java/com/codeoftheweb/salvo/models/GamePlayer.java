@@ -157,6 +157,12 @@ public class GamePlayer {
                 .allMatch(ship -> ship.isSunk(opponent));
     }
 
+    public boolean shipsAreSunk2() {
+        return getShips()
+                .stream()
+                .allMatch(Ship::isSunk2);
+    }
+
     public Integer getSalvoesMissed(Salvo salvo) {
         return getNumberSalvoLocations(salvo) - getNumberHitLocations(salvo);
     }
