@@ -384,6 +384,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    Un * para archivos, ** para carpetas y archivos
                 //Games tienen que ser accedidos por cualquier usuario
 //                .antMatchers("/api/**").permitAll()
+                .antMatchers("/").permitAll()
                 .antMatchers("/api/games").permitAll()
                 .antMatchers("/api/players").permitAll()
                 .antMatchers("/h2-console/**").permitAll()//allow h2 console access to admins only
