@@ -137,7 +137,7 @@ public class Ship {
     public boolean isSunk2() {
 //        System.out.println("total damage " + getTotalDamage());
 //        System.out.println("length  " + this.getLengthShip());
-        return getTotalDamage().compareTo(this.getLengthShip()) == 0;
+        return getTotalDamage().equals(this.getLengthShip());
     }
 
 }
