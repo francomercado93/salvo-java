@@ -17,7 +17,7 @@ public class Ship {
     @ElementCollection  //Crea una nueva tabla que tiene las celdas y el id del barco
     @Column(name = "cell")    //Cambia el nombre de la columna de cells a cell
     /*Cambiar por set ?*/
-    private List<String> locations = new ArrayList<>();
+    private Set<String> locations = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gamePlayerID")
@@ -72,11 +72,11 @@ public class Ship {
         return new Long(getLocations().size());
     }
 
-    public List<String> getLocations() {
+    public Set<String> getLocations() {
         return locations;
     }
 
-    public void setLocations(List<String> locations) {
+    public void setLocations(Set<String> locations) {
         this.locations = locations;
     }
 

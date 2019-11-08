@@ -25,7 +25,7 @@ public class Game {
     private Set<GamePlayer> gamePlayers = new HashSet<>();
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
-    private List<Score> scores = new ArrayList<>();
+    private Set<Score> scores = new HashSet<>();
 
     @Transient
     private String gameState;
@@ -37,11 +37,11 @@ public class Game {
         this.created = created;
     }
 
-    public List<Score> getScores() {
+    public Set<Score> getScores() {
         return scores;
     }
 
-    public void setScores(List<Score> scores) {
+    public void setScores(Set<Score> scores) {
         this.scores = scores;
     }
 
@@ -141,7 +141,7 @@ public class Game {
                 gameState = "TIE";
                 return gameState;
             }
-            if (logged.shipsAreSunk2() ) {
+            if (logged.shipsAreSunk2()) {
                 gameState = "LOST";
                 return gameState;
             }
