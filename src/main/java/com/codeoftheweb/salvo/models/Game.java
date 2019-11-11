@@ -125,30 +125,30 @@ public class Game {
         }
         if (logged.getNumberOfSalvos() == opponent.getNumberOfSalvos()) {
 //            TODO: pasarle el turno para contar los salvos
-//            if (logged.shipsAreSunk(opponent) && opponent.shipsAreSunk(logged)) {
-//                gameState = "TIE";
-//                return gameState;
-//            }
-//            if (logged.shipsAreSunk(opponent)) {
-//                gameState = "LOST";
-//                return gameState;
-//            }
-//            if (opponent.shipsAreSunk(logged)) {
-//                gameState = "WON";
-//                return gameState;
-//            }
-            if (logged.shipsAreSunk2() && opponent.shipsAreSunk2()) {
+            if (logged.shipsAreSunk(opponent) && opponent.shipsAreSunk(logged)) {
                 gameState = "TIE";
                 return gameState;
             }
-            if (logged.shipsAreSunk2()) {
+            if (logged.shipsAreSunk(opponent)) {
                 gameState = "LOST";
                 return gameState;
             }
-            if (opponent.shipsAreSunk2()) {
+            if (opponent.shipsAreSunk(logged)) {
                 gameState = "WON";
                 return gameState;
             }
+//            if (logged.shipsAreSunk2() && opponent.shipsAreSunk2()) {
+//                gameState = "TIE";
+//                return gameState;
+//            }
+//            if (logged.shipsAreSunk2()) {
+//                gameState = "LOST";
+//                return gameState;
+//            }
+//            if (opponent.shipsAreSunk2()) {
+//                gameState = "WON";
+//                return gameState;
+//            }
             System.out.println("logged " + logged.shipsAreSunk2());
             System.out.println("opponent " + opponent.shipsAreSunk2());
         }

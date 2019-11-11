@@ -17,7 +17,7 @@ public class Ship {
     @ElementCollection  //Crea una nueva tabla que tiene las celdas y el id del barco
     @Column(name = "cell")    //Cambia el nombre de la columna de cells a cell
     /*Cambiar por set ?*/
-    private Set<String> locations = new HashSet<>();
+    private List<String> locations = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gamePlayerID")
@@ -72,11 +72,11 @@ public class Ship {
         return new Long(getLocations().size());
     }
 
-    public Set<String> getLocations() {
+    public List<String> getLocations() {
         return locations;
     }
 
-    public void setLocations(Set<String> locations) {
+    public void setLocations(List<String> locations) {
         this.locations = locations;
     }
 
@@ -119,18 +119,26 @@ public class Ship {
     }
 
     public boolean isSunk(GamePlayer opponent) {
-        List<String> salvoLocation = opponent
-                .getSalvoes().stream()
-                .map(salvo -> salvo.getSalvoLocations())
-                .flatMap(locations -> locations.stream())
-                .collect(Collectors.toList());
-        Long hitsShip = new Long(0);
-        for (String salvoLocatio : salvoLocation) {
-            if (this.getLocations().contains(salvoLocatio)) {
-                hitsShip++;
+        Salvo lastSalvo = opponent.getSalvoes().stream().max(Comparator.comparingInt(Salvo::getTurn)).orElse(null);
+        if (lastSalvo != null) {
+            Integer lastTurn = lastSalvo.getTurn();
+            List<String> salvoLocation = opponent
+                    .getSalvoes().stream()
+                    .filter(salvo -> salvo.getTurn() <= lastTurn)
+                    .map(salvo -> salvo.getSalvoLocations())
+                    .flatMap(locations -> locations.stream())
+                    .collect(Collectors.toList());
+            Long hitsShip = new Long(0);
+            for (String salvoLocatio : salvoLocation) {
+                if (this.getLocations().contains(salvoLocatio)) {
+                    hitsShip++;
+                }
             }
+            return hitsShip.compareTo(this.getLengthShip()) == 0;
+        } else {
+            return false;
         }
-        return hitsShip.compareTo(this.getLengthShip()) == 0;
+
     }
 
     // TODO: probar de nuevo
