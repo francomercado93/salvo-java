@@ -42,16 +42,15 @@ public class SalvoController {
     @RequestMapping(path = "/game/{gameId}/players", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> joinGame(Authentication authentication, @PathVariable Long gameId) {
 
+        ResponseEntity<Map<String, Object>> responseEntity;
         if (this.isGuest(authentication)) {
-            return getResponseEntity("error", "Unauthorized", HttpStatus.UNAUTHORIZED);
+            responseEntity = getResponseEntity("error", "Unauthorized", HttpStatus.UNAUTHORIZED);
         }
         Player player = playerRepository.findByUserName(authentication.getName());
         Game game = gameRepository.findById(gameId).orElse(null);
         if (game == null) {
-            return getResponseEntity("error", "No such game", HttpStatus.FORBIDDEN);
+            responseEntity = getResponseEntity("error", "No such game", HttpStatus.FORBIDDEN);
         }
-//      TODO: validar que un usuario no se pueda unir a un game dos veces a traves de un request POST
-
         if (game.getNumberGamePlayers() > 1) {
             return getResponseEntity("error", "Game is full", HttpStatus.FORBIDDEN);
         }
@@ -60,14 +59,15 @@ public class SalvoController {
         return this.getResponseEntity("gpid", String.valueOf(newGamePlayer.getId()), HttpStatus.CREATED);
     }
 
-    private ResponseEntity<Map<String, Object>> getResponseEntity(String error, String message, HttpStatus httpStatus) {
+    private ResponseEntity<Map<String, Object>> getResponseEntity(String error, String message, HttpStatus
+            httpStatus) {
         return new ResponseEntity<>(this.makeMap(error, message), httpStatus);
     }
 
     //Le paso el id de gamePlayer y en el json el primer id es el del game
     @RequestMapping("/game_view/{gamePlayerId}")
-    public ResponseEntity<Map<String, Object>> getGamePlayerInformation(@PathVariable Long gamePlayerId, Authentication authentication) {
-
+    public ResponseEntity<Map<String, Object>> getGamePlayerInformation(@PathVariable Long
+                                                                                gamePlayerId, Authentication authentication) {
         if (this.isGuest(authentication)) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
@@ -79,7 +79,6 @@ public class SalvoController {
         if (this.isPlayerNotValid(player, gamePlayer)) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
-//        Cuando se crea un nuevo gamePlayer, que campos se deberian mostrar del json game view ?
         Game game = gamePlayer.getGame();
         Map<String, Object> dto = game.makeOwnerDTOGames(gamePlayer);
         putShips(gamePlayer, dto);
@@ -162,12 +161,16 @@ public class SalvoController {
         if (this.isPlayerNotValid(player, gamePlayer)) {
             return getResponseEntity("error", "No posee autorizacion", HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(this.makeMap("ships", gamePlayer.getShips()
-                .stream().sorted(Comparator.comparingLong(Ship::getId)).map(ship -> ship.makeDTOShip())), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(this.makeMap("ships", gamePlayer
+                .getShips()
+                .stream()
+                .sorted(Comparator.comparingLong(Ship::getId))
+                .map(ship -> ship.makeDTOShip())), HttpStatus.ACCEPTED);
     }
 
     @RequestMapping("/games/players/{gamePlayerId}/salvoes")
-    public ResponseEntity<Map<String, Object>> getPlaceSalvoes(Authentication authentication, @PathVariable Long gamePlayerId) {
+    public ResponseEntity<Map<String, Object>> getPlaceSalvoes(Authentication authentication, @PathVariable Long
+            gamePlayerId) {
 
         GamePlayer gamePlayer = gamePlayerRepository.findById(gamePlayerId).orElse(null);
 //      SE REPITE CODIGO
@@ -188,7 +191,11 @@ public class SalvoController {
     }
 
     private Object makeDTOSalvoes(GamePlayer gamePlayer) {
-        return gamePlayer.getSalvoes().stream().sorted(Comparator.comparingInt(Salvo::getTurn)).map(salvo -> salvo.makeDTOSalvo());
+        return gamePlayer
+                .getSalvoes()
+                .stream()
+                .sorted(Comparator.comparingInt(Salvo::getTurn))
+                .map(salvo -> salvo.makeDTOSalvo());
     }
 
     @RequestMapping(value = "/games/players/{gamePlayerId}/salvoes", method = RequestMethod.POST)
